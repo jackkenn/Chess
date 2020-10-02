@@ -1,0 +1,19 @@
+package board;
+
+public class Spot {
+	private static String id;
+	private static Piece piece;
+	
+	public Spot(String GivenName, Piece GivenPiece) {
+		id = GivenName;
+		piece = GivenPiece;
+	}
+	
+	public  String getID() {
+		return id;
+	}
+	
+	public Piece getPiece() {
+		return piece;
+	}
+}

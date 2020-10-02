@@ -1,0 +1,11 @@
+package board;
+
+public abstract class Piece {
+	private static Spot spot;
+	private static Board board;
+	
+	public Piece(Board givenBoard) {
+		board = givenBoard;
+	}
+
+}

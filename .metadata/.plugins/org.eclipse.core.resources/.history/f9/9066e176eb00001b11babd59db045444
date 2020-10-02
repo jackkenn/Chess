@@ -1,0 +1,17 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Spot {
+	public Piece piece;
+	public Cord cord;
+	
+	public Spot() {
+		
+	}
+	
+	public void init(int givenRow, int givenColumn, Piece GivenPiece) {
+		cord = new Cord(givenRow, givenColumn);
+		piece = GivenPiece;
+	}
+}

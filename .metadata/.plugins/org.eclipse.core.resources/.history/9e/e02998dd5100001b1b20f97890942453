@@ -1,0 +1,28 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Board {
+	public ArrayList<ArrayList<Spot>> grid;
+	
+	public Board() {
+		grid = new ArrayList<ArrayList<Spot>>();
+		genGrid(8, 8);
+	}
+	
+	private void genGrid(int width, int height) {
+		for(int i=0; i<width; i++) {
+			grid.add(new ArrayList<Spot>());
+			for(int j=0; j<height; j++) {
+				String s = new String((char)(i+65)+Integer.toString(j+1));
+				grid.get(i).add(new Spot(s, new Empty(this)));
+			}
+		}
+	}
+	
+	public Piece getSpot(String s) {
+		char a[] = s.toCharArray();
+		return grid.get((int)a[0]-65).get((int)a[1]-48).getPiece();
+	}
+
+}

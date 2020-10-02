@@ -1,0 +1,32 @@
+package board;
+
+public class Cord{
+	public int row, column;
+	public String cord;
+	
+	public Cord(int givenRow, int givenColumn) throws NullPointerException{
+		row = givenRow;
+		column = givenColumn;
+		cord = new String((char)(row+65)+Integer.toString(column+1));
+	}
+	
+	public Cord(String s) {
+		column = (int) s.toCharArray()[0]-65;
+		row = (int) s.toCharArray()[1]-47;
+		cord = new String(s);
+	}
+	
+	public Cord(Cord GivenCord) {
+		Cord temp;
+		try {
+			temp = (Cord) GivenCord.clone();
+			row = temp.row;
+			column = temp.column;
+			cord = temp.cord;
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

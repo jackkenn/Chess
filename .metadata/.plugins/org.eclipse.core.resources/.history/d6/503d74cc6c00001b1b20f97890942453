@@ -1,0 +1,12 @@
+package board;
+
+public class Move {
+	public int row, column;
+	public String move;
+	public Move(int givenRow, int givenColumn) {
+		row = givenRow;
+		column = givenColumn;
+		move = new String((char)(row+65)+Integer.toString(column+1));
+	}
+
+}

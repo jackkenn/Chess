@@ -1,0 +1,105 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Board {
+	public ArrayList<ArrayList<Spot>> grid;
+	public Player empty, white, black;
+	
+	public Board() {
+		grid = new ArrayList<ArrayList<Spot>>();
+		white = new Player(this, 1);
+		black = new Player(this, -1);
+		genGrid(8, 8);
+	}
+	/*
+	private void genGrid(int rows, int columns){
+		for(int i=0; i<rows+2; i++) {
+			grid.add(new ArrayList<Spot>());
+			for(int j=0; j<columns+2; j++) {
+				grid.get(i).add(new Spot(i, j, this));
+				if(i==0||i==rows+1||j==0||j==columns+1) {
+					getSpot(i, j).setPiece(new Barrier(empty, getSpot(i, j), this));
+				}
+				
+				else if(i==2) {
+					getSpot(i, j).setPiece(new Pawn(white, getSpot(i, j), this));					
+				}
+				else if(i==rows-1) {
+					getSpot(i, j).setPiece(new Pawn(black, getSpot(i, j), this));					
+				}
+				
+				else {
+					getSpot(i, j).setPiece(new Empty(empty, getSpot(i, j), this));					
+				}
+			}
+		}
+		
+	}*/
+	
+	private void genGrid(int rows, int columns){
+		for(int i=0; i<rows+2; i++) {
+			grid.add(new ArrayList<Spot>());
+			for(int j=0; j<columns+2; j++) {
+				grid.get(i).add(new Spot(i, j, this));
+				if(i==0||i==rows+1||j==0||j==columns+1) {
+					getSpot(i, j).setPiece(new Barrier(empty, getSpot(i, j), this));
+				}
+				
+				else if(i==2) {
+					getSpot(i, j).setPiece(new Pawn(white, getSpot(i, j), this));					
+				}
+				else if(i==rows-1) {
+					getSpot(i, j).setPiece(new Pawn(black, getSpot(i, j), this));					
+				}
+				
+				else {
+					getSpot(i, j).setPiece(new Empty(empty, getSpot(i, j), this));					
+				}
+			}
+		}
+		
+	}
+	
+	public Piece getPiece(int row, int column) {
+		return grid.get(row).get(column).piece;
+	}
+	
+	public Piece getPiece(Cord cord) {
+		return grid.get(cord.row).get(cord.column).piece;
+	}
+	
+	public Piece getPiece(String s) {
+		return grid.get((int)s.toCharArray()[0]-65).get((int)s.toCharArray()[1]-48).piece;
+	}
+	
+	public Spot getSpot(int row, int column) {
+		return grid.get(row).get(column);
+	}
+	
+	public Spot getSpot(Cord cord) {
+		return grid.get(cord.row).get(cord.column);
+	}
+	
+	public Spot getSpot(String givenStringCord) {
+		Spot temp = getSpot(new Cord(givenStringCord));
+		return temp;
+	}
+	
+	public String toString() {
+		String s = new String();
+		for(int i=0; i<grid.size(); i++) {
+			for(int j=0; j<grid.get(i).size(); j++) {
+				try {
+					s += " " + getPiece(i, j).toString() + " ";
+				} catch (NullPointerException e) {
+					s += " # ";
+					System.out.print("null spot at " + i + ", " + j + "\n");
+				}
+			}
+			s += "\n";
+		}
+		return s;
+	}
+
+}

@@ -1,0 +1,23 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Player {
+	private ArrayList<Piece> pieces;
+	private Board board;
+	public final int DIRECTION;
+	
+	public Player(Board givenBoard, int givenDirection) {
+		board = givenBoard;
+		DIRECTION = givenDirection;
+	}
+	
+	public void addPiece(Piece givenPiece) {
+		pieces.add(givenPiece);
+	}
+	
+	public void removePiece(Piece givenPiece) {
+		pieces.remove(givenPiece);
+	}
+
+}

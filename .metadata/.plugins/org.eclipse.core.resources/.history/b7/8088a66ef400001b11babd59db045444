@@ -1,0 +1,64 @@
+package board;
+
+import java.util.ArrayList;
+
+public abstract class Piece implements Cloneable{
+	private Player player;
+	private Spot spot;
+	private Board board;
+	private ArrayList<Cord> moves;
+	private Cord cord;
+	
+	public Piece(Player givenPlayer, Spot givenSpot, Board givenBoard) {
+		player = givenPlayer;
+		spot = givenSpot;
+		board = givenBoard;
+		try {
+			cord = new Cord (spot.cord.row, spot.cord.column);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public Piece(Piece oldPiece) {
+		player = oldPiece.getPlayer();
+	}
+	
+	@Override
+	public Piece clone() {
+		Piece piece = null;
+		try {
+			piece = (Piece) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return piece;
+	}
+	
+	public void swap(Piece prev, Piece next) {
+		Piece temp = prev.clone();
+		prev = next;
+		next = temp;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public String[] getMovesList() {
+		getMoves();
+		String[] s = new String[moves.size()];
+		for(int i=0; i<moves.size(); i++) {
+			s[i] = moves.get(i).cord;
+		}
+		return s;
+	}
+	
+	public abstract PieceType getType();
+	public abstract String toString();
+	public abstract void move(int row, int column);
+	public abstract ArrayList<Cord> getMoves();
+
+}

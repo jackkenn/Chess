@@ -1,0 +1,39 @@
+package board;
+
+public abstract class Piece implements Cloneable{
+	private Player player;
+	private String[] movesList;
+	private int[][] moves;
+	
+	public Piece(Player givenPlayer) {
+		player = given
+	}
+	
+	public Piece(Piece old) {
+		board = old.getBoard();
+	}
+	
+	@Override
+	public Piece clone() throws CloneNotSupportedException{
+		Piece piece = null;
+		piece = (Piece) super.clone();
+		return piece;
+	}
+	
+	public void swap(Piece prev, Piece next) throws CloneNotSupportedException {
+		Piece temp = prev.clone();
+		prev = next;
+		next = temp;
+	}
+	
+	public Board getBoard() {
+		return board;
+	}
+	
+	public abstract PieceType getType();
+	public abstract String toString();
+	public abstract void move();
+	public abstract String[] getMovesList();
+	public abstract int[][] getMoves();
+
+}

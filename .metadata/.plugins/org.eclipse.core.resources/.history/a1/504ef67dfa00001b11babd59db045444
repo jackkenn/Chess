@@ -1,0 +1,22 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Spot {
+	public Piece piece;
+	public Cord cord;
+	
+	public Spot(int givenRow, int givenColumn) {
+		cord = new Cord(givenRow, givenColumn);
+	}
+	
+	public void setPiece(Piece GivenPiece) {
+		piece = GivenPiece;
+	}
+	
+	public void swapPiece(Spot next) {
+		Piece temp = piece.clone(next);
+		next.piece = piece;
+		piece = temp;
+	}
+}
