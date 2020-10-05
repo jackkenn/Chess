@@ -14,7 +14,10 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		String input = new String();
 		ArrayList<String> inputList = new ArrayList<String>();
-		b.getSpot("B7").movePiece("B6");
+		b.getSpot("F1").movePiece("D3");
+		b.getSpot("E2").movePiece("E4");
+		b.getSpot("F1").movePiece("D3");
+		b.getSpot("G1").movePiece("F3");
 		print("\n" + b.toString());
 		
 		/*

@@ -7,6 +7,11 @@ public class Pawn extends Piece{
 	public Pawn(Player givenPlayer, Spot givenSpot, Board givenBoard) {
 		super(givenPlayer, givenSpot, givenBoard);
 	}
+	
+	public Pawn(Piece oldPiece) {
+		super(oldPiece);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public PieceType getType() {
@@ -21,18 +26,62 @@ public class Pawn extends Piece{
 	@Override
 	public ArrayList<Cord> getMoves() {
 		moves.clear();
-		for(int i=-1; i<2; i++) {
-			try {
-				Piece toCheck = board.getPiece(cord.row+player.DIRECTION, cord.column+i);
-				if(toCheck.getType()!=PieceType.EMPTY&&toCheck.getType()!=PieceType.BARRIER&&toCheck.player!=player) {
-					moves.add(new Cord(cord.row+player.DIRECTION, cord.column+i));
+		Piece toCheck = board.getPiece(cord.row+player.DIRECTION, cord.column);
+		if(toCheck.getType()==PieceType.EMPTY) {
+			moves.add(new Cord(toCheck.cord));
+			toCheck = board.getPiece(cord.row+player.DIRECTION+player.DIRECTION, cord.column);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+			}
+		}
+		toCheck = board.getPiece(cord.row+player.DIRECTION, cord.column+1);
+		if(toCheck.getType()!=PieceType.BARRIER) {
+			if(toCheck.getType()!=PieceType.EMPTY&&toCheck.player!=player) {
+				moves.add(new Cord(toCheck.cord));
+			}
+			if(toCheck.getType()==PieceType.EMPTY) {
+				if(toCheck.enPassant != null) {
+					if(spot==toCheck.spot&&toCheck.enPassant.player!=player) {
+						moves.add(new Cord(toCheck.cord));
+					}
 				}
-				else if(toCheck.getType()==PieceType.EMPTY&&i==0) {
-					moves.add(new Cord(cord.row+player.DIRECTION, cord.column+i));
+			}
+		}
+		toCheck = board.getPiece(cord.row+player.DIRECTION, cord.column-1);
+		if(toCheck.getType()!=PieceType.BARRIER) {
+			if(toCheck.getType()!=PieceType.EMPTY&&toCheck.player!=player) {
+				moves.add(new Cord(toCheck.cord));
+			}
+			if(toCheck.getType()==PieceType.EMPTY) {
+				if(toCheck.enPassant != null) {
+					if(spot==toCheck.spot&&toCheck.enPassant.player!=player) {
+						moves.add(new Cord(toCheck.cord));
+					}
 				}
-			} catch (NullPointerException e) {}
+			}
 		}
 		return moves;
 	}
-
+	
+	public boolean enPassant(Spot next) {
+		Piece toCheck = board.getPiece(next.cord);
+		if(toCheck.getType()==PieceType.EMPTY) {
+			if(toCheck.enPassant != null) {
+				if(toCheck.enPassant.player!=player) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	public boolean doubleMove(Spot next) {
+		Piece toCheck = board.getPiece(cord.row+player.DIRECTION, cord.column);
+		if(toCheck.getType()==PieceType.EMPTY&&!moved) {
+			toCheck = board.getPiece(cord.row+player.DIRECTION+player.DIRECTION, cord.column);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				return toCheck.spot==next ? true : false;
+			}
+		}
+		return false;
+	}
 }

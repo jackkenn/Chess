@@ -28,8 +28,26 @@ public class King extends Piece{
 
 	@Override
 	public ArrayList<Cord> getMoves() {
-		// TODO Auto-generated method stub
-		return null;
+		moves.clear();
+		for(int i=-1; i<2; i++) {
+			for(int j=-1; j<2; j++) {
+				Piece toCheck = board.getPiece(cord.row+i, cord.column+j);
+				if(toCheck.getType()==PieceType.EMPTY) {
+					moves.add(new Cord(toCheck.cord));
+				}
+				else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+					moves.add(new Cord(toCheck.cord));
+				}
+			}
+		}
+		return moves;
+	}
+	
+	public boolean castle(Spot next) {
+		if(!moved&&next.piece.getType()==PieceType.ROOK&&!next.piece.moved) {
+			
+		}
+		return false;
 	}
 
 }

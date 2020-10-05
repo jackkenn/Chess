@@ -1,0 +1,54 @@
+package board;
+
+import java.util.ArrayList;
+
+public class Spot {
+	public Piece piece;
+	public Cord cord;
+	public Board board;
+	public ArrayList<Piece> possiblePieces = new ArrayList<Piece>();
+	
+	public Spot(int givenRow, int givenColumn, Board giveBoard) {
+		scord = new Cord(givenRow, givenColumn);
+		board = giveBoard;
+	}
+	
+	public void setPiece(Piece GivenPiece) {
+		piece = GivenPiece;
+	}
+	
+	public boolean movePiece(Spot next) {
+		piece.addMoves();
+		if(piece.getType()==PieceType.PAWN) {
+			if(((Pawn) piece).doubleMove()) {
+				board.getPiece(scord, column)
+			}
+		}
+		if(next.possiblePieces.contains(piece)) {
+			if(next.piece.getType()==PieceType.EMPTY) {
+				Piece temp = next.piece.clone(this);
+				Piece temp1 = piece.clone(next);
+				next.piece.removeMoves();
+				piece.removeMoves();
+				next.piece = temp1;
+				piece = temp;
+			}
+			else if(next.piece.player!=piece.player) {//already checked
+				Piece temp = new Empty(next.piece.clone(this));
+				Piece temp1 = piece.clone(next);
+				next.piece.delete();
+				piece.removeMoves();
+				next.piece = temp1;
+				piece = temp;
+			}
+		}
+		else {
+			return false;
+		}
+		return true;
+	}
+	
+	public void movePiece(String givenStringCord) {
+		movePiece(board.getSpot(new Cord(givenStringCord)));
+	}
+}

@@ -9,17 +9,28 @@ public abstract class Piece implements Cloneable{
 	protected ArrayList<Cord> moves = new ArrayList<Cord>();
 	protected Cord cord;
 	public ArrayList<Spot> possibleMoves = new ArrayList<Spot>();
+	public Pawn enPassant = null;
+	public boolean moved = false;
 	
 	public Piece(Player givenPlayer, Spot givenSpot, Board givenBoard) {
 		player = givenPlayer;
 		spot = givenSpot;
 		board = givenBoard;
-		cord = new Cord(spot.scord.row, spot.scord.column);
+		cord = new Cord(spot.cord.row, spot.cord.column);
+		player.pieces.add(this);
 		
 	}
 	
-	public Piece(Piece oldPiece) {
-		player = oldPiece.getPlayer();
+	public Piece(Piece givenPiece) {
+		player = givenPiece.player;
+		spot = givenPiece.spot;
+		board = givenPiece.board;
+		cord = givenPiece.cord;
+	}
+	
+	public void delete() {
+		player.pieces.remove(this);
+		removeMoves();
 	}
 	
 	public Piece clone(Spot givenSpot) {
@@ -27,7 +38,8 @@ public abstract class Piece implements Cloneable{
 		try {
 			piece = (Piece) super.clone();
 			piece.spot = givenSpot;
-			addMoves();
+			piece.cord = givenSpot.cord;
+			piece.player.pieces.add(piece);
 			
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();

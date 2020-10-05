@@ -28,8 +28,128 @@ public class Queen extends Piece{
 
 	@Override
 	public ArrayList<Cord> getMoves() {
-		// TODO Auto-generated method stub
-		return null;
+		moves.clear();
+		int i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row+i, cord.column+i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row-i, cord.column+i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row-i, cord.column-i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row+i, cord.column-i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row+i, cord.column);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row-i, cord.column);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row, cord.column+i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		i = 1;
+		while(true) {
+			Piece toCheck = board.getPiece(cord.row, cord.column-i);
+			if(toCheck.getType()==PieceType.EMPTY) {
+				moves.add(new Cord(toCheck.cord));
+				i++;
+			}
+			else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
+				moves.add(new Cord(toCheck.cord));
+				break;
+			}
+			else {
+				break;
+			}
+		}
+		return moves;
 	}
 
 }

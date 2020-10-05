@@ -1,9 +1,0 @@
-package board;
-
-public class Empty extends Piece{
-	
-	public Empty(Board givenBoard) {
-		super(givenBoard);
-	}
-
-}

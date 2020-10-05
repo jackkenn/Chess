@@ -5,4 +5,5 @@
     <fullyQualifiedTypeName name="java.util.Scanner"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="board.PieceType"/>
+    <fullyQualifiedTypeName name="board.Spot"/>
 </qualifiedTypeNameHistroy>
