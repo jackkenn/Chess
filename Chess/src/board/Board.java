@@ -77,11 +77,17 @@ public class Board {
 	}
 	
 	public Spot getSpot(int row, int column) {
+		if(row>=grid.size()||row<0) {
+			throw new IndexOutOfBoundsException();
+		}
+		if(column>=grid.get(0).size()||column<0) {
+			throw new IndexOutOfBoundsException();
+		}
 		return grid.get(row).get(column);
 	}
 	
 	public Spot getSpot(Cord cord) {
-		return grid.get(cord.row).get(cord.column);
+		return getSpot(cord.row, cord.column);
 	}
 	
 	public Spot getSpot(String givenStringCord) {

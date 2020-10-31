@@ -16,8 +16,16 @@ public class Spot {
 	public void setPiece(Piece GivenPiece) {
 		piece = GivenPiece;
 	}
+	
+	public boolean isAttacked(Player player) {
+		boolean attacked = false;
+		for (int i = 0; i < possiblePieces.size(); i++) {
+				attacked = possiblePieces.get(i).player == player.opponent ? true : false;
+		}
+		return attacked;
+	}
 
-	private void enPassant(Spot next) {
+	private boolean enPassant(Spot next) {
 		if (((Pawn) piece).enPassant(next)) {
 			Piece temp = new Empty(next.piece.clone(this));
 			Piece temp1 = piece.clone(next);
@@ -29,10 +37,12 @@ public class Spot {
 			piece = temp;
 			board.getPiece(cord.row + piece.player.DIRECTION, cord.column).enPassant = null;
 			piece.player.enPassant = null;
+			return true;
 		}
+		return false;
 	}
 
-	private void doubleMove(Spot next) {
+	private boolean doubleMove(Spot next) {
 		if (((Pawn) piece).doubleMove(next)) {
 			Piece temp = next.piece.clone(this);
 			Piece temp1 = piece.clone(next);
@@ -44,17 +54,56 @@ public class Spot {
 			Piece t = board.getPiece(cord.row + next.piece.player.DIRECTION, cord.column);
 			t.enPassant = (Pawn) next.piece;
 			piece.player.enPassant = (Empty) board.getPiece(cord.row + piece.player.DIRECTION, cord.column);
+			return true;
 		}
+		return false;
 	}
 
+	private boolean castle(Spot next) {
+		if(((King) piece).castle(next)) {
+			Spot kingSpot = null;
+			Spot rookSpot = null;
+			if (next.cord.column < cord.column) { // queen side
+				kingSpot = board.getSpot(cord.row, cord.column-2);
+				rookSpot = board.getSpot(cord.row, cord.column-1);
+			}else { //king side
+				kingSpot = board.getSpot(cord.row, cord.column+2);
+				rookSpot = board.getSpot(cord.row, cord.column+1);
+			}
+			
+			Piece newPiece = kingSpot.piece.clone(this);
+			Piece oldPiece = piece.clone(kingSpot);
+			kingSpot.piece.removeMoves();
+			piece.removeMoves();
+			kingSpot.piece = oldPiece;
+			oldPiece.moved = true;
+			piece = newPiece;
+			
+			newPiece = rookSpot.piece.clone(this);
+			oldPiece = next.piece.clone(rookSpot);
+			rookSpot.piece.removeMoves();
+			next.piece.removeMoves();
+			rookSpot.piece = oldPiece;
+			oldPiece.moved = true;
+			next.piece = newPiece;
+			
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean movePiece(Spot next) {
 		if (piece.getType() == PieceType.PAWN) {
-			doubleMove(next);
-			enPassant(next);
+			if(doubleMove(next)) {}
+			else if(enPassant(next)) {}
+			piece.addMoves();
+			return true;
 		}
 		
 		if (piece.getType() == PieceType.KING) {
-			
+			if(castle(next)) {}
+			piece.addMoves();
+			return true;
 		}
 
 		piece.addMoves();

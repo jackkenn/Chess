@@ -4,26 +4,29 @@ import java.util.ArrayList;
 
 public class Player {
 	public ArrayList<Piece> pieces;
-	public ArrayList<Spot> moves;
+	public ArrayList<Spot[]> moves;
 	public Board board;
 	public final int DIRECTION;
 	public Player opponent;
 	public boolean turn = false;
 	public Empty enPassant = null;
+	public King king = null;
 	
 	public Player(Board givenBoard, int givenDirection) {
 		board = givenBoard;
 		DIRECTION = givenDirection;
 		
 		pieces = new ArrayList<Piece>();
-		moves = new ArrayList<Spot>();
+		moves = new ArrayList<Spot[]>();
 	}
 	
-	public ArrayList<Spot> getMoves(){
+	public ArrayList<Spot[]> getMoves(){
 		moves.clear();
-		for(int i=0; i<pieces.size(); i++) {
+		for(int i=0; i<pieces.size()-1; i++) { //uhh
 			pieces.get(i).addMoves();
-			moves.addAll(pieces.get(i).possibleMoves);
+			for(int j=0; j<pieces.get(i).possibleMoves.size()-1; i++) {
+				moves.add(new Spot[] {pieces.get(i).spot, pieces.get(i).possibleMoves.get(j)});
+			}
 		}
 		return moves;
 	}
