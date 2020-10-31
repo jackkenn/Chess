@@ -33,10 +33,10 @@ public class Main {
 					//if (!turn.king.spot.isAttacked(turn)) {
 						if (!turn.moves.isEmpty()) {
 							if (curSpot.movePiece(nextSpot)) {
-								inputList.add(curCord.cord + " " + nextCord.cord);
+								inputList.add(input);
 								turn.getMoves();
 								turn = turn.opponent;
-								print(board.toString() + "\n");
+								print(board.toString());
 								scan.close();
 								return true;
 							}
@@ -87,14 +87,12 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		boolean runlast = true;
-		boolean record = false;
-		
 		print(board.toString());
 		if(runlast) { //repeat last game
 			File f = new File("MoveList.txt");
 			Scanner tscan = new Scanner(f);
 			while(tscan.hasNextLine()) {
-				move(tscan.nextLine().toUpperCase());
+				move(tscan.nextLine());
 			}
 			tscan.close();
 		}
@@ -104,15 +102,13 @@ public class Main {
 				move(input.toUpperCase());
 			}
 		}
-		
-		if(record) {
-			BufferedWriter moveList = new BufferedWriter(new FileWriter("MoveList.txt"));
-			for(int i=0; i<inputList.size(); i++) {
-				moveList.write(inputList.get(i)+"\n");
-			}
-			moveList.close();
+		BufferedWriter moveList = new BufferedWriter(new FileWriter("MoveList.txt"));
+		for(int i=0; i<inputList.size(); i++) {
+			moveList.write(inputList.get(i)+"\n");
 		}
 		
+		moveList.close();
 		scan.close();
+
 	}
 }

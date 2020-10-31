@@ -30,7 +30,7 @@ public class Spot {
 			Piece temp = new Empty(next.piece.clone(this));
 			Piece temp1 = piece.clone(next);
 			next.piece.delete();
-			piece.delete();
+			piece.removeMoves();
 			next.piece.enPassant.spot.piece = new Empty(next.piece.clone(next.piece.enPassant.spot));
 			next.piece = temp1;
 			temp.moved = true;
@@ -46,8 +46,8 @@ public class Spot {
 		if (((Pawn) piece).doubleMove(next)) {
 			Piece temp = next.piece.clone(this);
 			Piece temp1 = piece.clone(next);
-			next.piece.delete();
-			piece.delete();
+			next.piece.removeMoves();
+			piece.removeMoves();
 			next.piece = temp1;
 			temp.moved = true;
 			piece = temp;
@@ -73,16 +73,16 @@ public class Spot {
 			
 			Piece newPiece = kingSpot.piece.clone(this);
 			Piece oldPiece = piece.clone(kingSpot);
-			kingSpot.piece.delete();
-			piece.delete();
+			kingSpot.piece.removeMoves();
+			piece.removeMoves();
 			kingSpot.piece = oldPiece;
 			oldPiece.moved = true;
 			piece = newPiece;
 			
 			newPiece = rookSpot.piece.clone(this);
 			oldPiece = next.piece.clone(rookSpot);
-			rookSpot.piece.delete();
-			next.piece.delete();
+			rookSpot.piece.removeMoves();
+			next.piece.removeMoves();
 			rookSpot.piece = oldPiece;
 			oldPiece.moved = true;
 			next.piece = newPiece;
@@ -94,21 +94,16 @@ public class Spot {
 	
 	public boolean movePiece(Spot next) {
 		if (piece.getType() == PieceType.PAWN) {
-			if(doubleMove(next)) {
-				piece.addMoves();
-				return true;
-			}
-			else if(enPassant(next)) {
-				piece.addMoves();
-				return true;
-			}
+			if(doubleMove(next)) {}
+			else if(enPassant(next)) {}
+			piece.addMoves();
+			return true;
 		}
 		
 		if (piece.getType() == PieceType.KING) {
-			if(castle(next)) {
-				piece.addMoves();
-				return true;
-			}
+			if(castle(next)) {}
+			piece.addMoves();
+			return true;
 		}
 
 		piece.addMoves();
@@ -116,8 +111,8 @@ public class Spot {
 			if (next.piece.getType() == PieceType.EMPTY) {
 				Piece temp = next.piece.clone(this);
 				Piece temp1 = piece.clone(next);
-				next.piece.delete();
-				piece.delete();
+				next.piece.removeMoves();
+				piece.removeMoves();
 				next.piece = temp1;
 				temp.moved = true;
 				piece = temp;
@@ -125,7 +120,7 @@ public class Spot {
 				Piece temp = new Empty(next.piece.clone(this));
 				Piece temp1 = piece.clone(next);
 				next.piece.delete();
-				piece.delete();
+				piece.removeMoves();
 				next.piece = temp1;
 				temp.moved = true;
 				piece = temp;

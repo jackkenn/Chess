@@ -86,8 +86,8 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException {
-		boolean runlast = true;
-		boolean record = false;
+		boolean runlast = false;
+		boolean record = true;
 		
 		print(board.toString());
 		if(runlast) { //repeat last game

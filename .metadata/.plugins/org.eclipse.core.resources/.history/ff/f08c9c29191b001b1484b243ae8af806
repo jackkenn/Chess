@@ -33,7 +33,7 @@ public class Main {
 					//if (!turn.king.spot.isAttacked(turn)) {
 						if (!turn.moves.isEmpty()) {
 							if (curSpot.movePiece(nextSpot)) {
-								inputList.add(curCord.cord + " " + nextCord.cord);
+								inputList.add(input);
 								turn.getMoves();
 								turn = turn.opponent;
 								print(board.toString() + "\n");
@@ -88,7 +88,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		boolean runlast = true;
 		boolean record = false;
-		
 		print(board.toString());
 		if(runlast) { //repeat last game
 			File f = new File("MoveList.txt");
