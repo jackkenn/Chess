@@ -1,0 +1,80 @@
+package game;
+
+import java.util.ArrayList;
+import game.Board.*;
+import game.pieces.*;
+
+public class Player implements Cloneable {
+	public ArrayList<Piece> pieces;
+	public ArrayList<Spot> moves;
+	public Board board;
+	public final int DIRECTION;
+	public Player opponent;
+	public boolean turn = false;
+	public Empty enPassant = null;
+	public King king = null;
+	public ArrayList<Spot[]> legalMoves;
+
+	public Player(Board givenBoard, int givenDirection) {
+		board = givenBoard;
+		DIRECTION = givenDirection;
+
+		pieces = new ArrayList<Piece>();
+		moves = new ArrayList<Spot>();
+		legalMoves = new ArrayList<Spot[]>();
+	}
+	
+	public Player clone(Board givenBoard) throws CloneNotSupportedException {
+		Player clone = new Player(givenBoard, DIRECTION);
+		for(Piece p : pieces) {
+			if(p.getType() == PieceType.KING) {
+				clone.king = (King) p.clone(clone, givenBoard.getSpot(p.getSpot().cord), givenBoard);
+			} else {
+				p.clone(clone, givenBoard.getSpot(p.getSpot().cord), givenBoard);
+			}
+		}
+		clone.turn = turn;
+		if(enPassant != null) {
+			clone.enPassant = (Empty) givenBoard.getPiece(enPassant.getSpot().cord);
+			
+		}
+		return clone;
+	}
+
+	public ArrayList<Spot> getMoves() {
+		moves.clear();
+		for (Piece p : pieces) {
+			p.getMoves();
+			for(Spot s : p.possibleMoves) {
+				moves.add(s);
+			}
+		}
+		return moves;
+	}
+
+	public boolean isMated() {
+		if (king.getSpot().isAttacked(this)) {
+			for(Spot s : king.possibleMoves) {
+				if(!s.isAttacked(this)) {
+					return false;
+				}
+			}
+			ArrayList<Spot> spotsToCheck = new ArrayList<Spot>();
+			for(Piece p : king.getSpot().possiblePieces) {
+				if(p.getPlayer()==opponent) {
+					spotsToCheck.add(p.getSpot());
+					if(p.getType() != PieceType.KNIGHT) {
+						spotsToCheck.addAll(p.possibleMoves);
+					}
+				}
+			}
+			for(Spot s : spotsToCheck) {
+				if(moves.contains(s)) {
+					
+				}
+			}
+		}
+		return false;
+	}
+
+}

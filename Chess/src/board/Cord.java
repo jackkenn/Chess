@@ -30,7 +30,6 @@ public class Cord implements Cloneable{
 		try {
 			return (Cord) super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

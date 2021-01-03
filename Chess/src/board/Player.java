@@ -24,11 +24,27 @@ public class Player {
 		moves.clear();
 		for(int i=0; i<pieces.size()-1; i++) { //uhh
 			pieces.get(i).addMoves();
+			int temp = pieces.size()-1;
 			for(int j=0; j<pieces.get(i).possibleMoves.size()-1; i++) {
 				moves.add(new Spot[] {pieces.get(i).spot, pieces.get(i).possibleMoves.get(j)});
 			}
 		}
 		return moves;
+	}
+	
+	public boolean isMated() {
+		if(king.spot.isAttacked(this)) {
+			ArrayList<Spot> checkingPieceMoves = new ArrayList<Spot>();
+			for(int i=0; i<king.spot.possiblePieces.size(); i++) {
+				if(king.spot.possiblePieces.get(i).player==opponent) {
+					for(int j=0; j<king.spot.possiblePieces.get(i).possibleMoves.size(); j++) {
+						
+					}
+				}
+			}
+			
+		}
+		return false;
 	}
 
 }

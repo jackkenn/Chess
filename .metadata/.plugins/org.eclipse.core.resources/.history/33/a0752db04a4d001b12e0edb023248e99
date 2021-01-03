@@ -1,0 +1,54 @@
+package game;
+
+import java.util.ArrayList;
+import game.Board.*;
+import game.pieces.*;
+
+public class Player implements Cloneable {
+	public ArrayList<Piece> pieces;
+	public ArrayList<Spot> moves;
+	public Board board;
+	public final int DIRECTION;
+	public Player opponent;
+	public boolean turn = false;
+	public Empty enPassant = null;
+	public King king = null;
+
+	public Player(Board givenBoard, int givenDirection) {
+		board = givenBoard;
+		DIRECTION = givenDirection;
+
+		pieces = new ArrayList<Piece>();
+		moves = new ArrayList<Spot>();
+	}
+	
+	public Player clone(Board givenBoard) {
+		Player clone = new Player(givenBoard, DIRECTION);
+		for(Piece p : pieces) {
+			
+		}
+		return opponent;
+	}
+
+	public ArrayList<Spot> getMoves() {
+		moves.clear();
+		for (Piece p : pieces) {
+			p.getMoves();
+			for(Spot s : p.possibleMoves) {
+				moves.add(s);
+			}
+		}
+		return moves;
+	}
+
+	public boolean isMated() {
+		if (king.getSpot().isAttacked(this)) {
+			for(Piece p : king.getSpot().possiblePieces) {
+				
+			}
+			
+		}
+		return false;
+	}
+
+}

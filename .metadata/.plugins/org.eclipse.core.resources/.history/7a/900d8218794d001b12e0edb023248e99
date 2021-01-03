@@ -1,0 +1,111 @@
+package game;
+
+import java.awt.Image;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import game.Board.Spot;
+
+public class GameWindow extends javax.swing.JFrame implements WindowListener {
+	public Board board;
+	public WindowSpot windowGrid[][] = new WindowSpot[8][8];
+
+	public GameWindow(Board givenBoard) {
+		super("Chess");
+		board = givenBoard;
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(560, 580);
+		this.setLocationRelativeTo(null);
+		Image icon = new javax.swing.ImageIcon("graphics/board.png").getImage();
+		this.setIconImage(icon);
+		this.setResizable(false);
+		this.setLayout(null);
+		boolean flag = true;
+		/*
+		for (int i = 0; i < 8; i++) {
+			flag = !flag;
+			for (int j = 0; j < 8; j++) {
+				if (flag) {
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(i + 1, j + 1),
+							"graphics/BlackTile.png");
+					this.add(windowGrid[i][j]);
+					flag = !flag;
+				} else {
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(i + 1, j + 1),
+							"graphics/WhiteTile.png");
+					this.add(windowGrid[i][j]);
+					flag = !flag;
+				}
+			}
+		}
+		*/
+		
+		JPanel panel = (JPanel)this.getContentPane();
+		JLabel label = new JLabel();
+		label.setIcon(new ImageIcon("graphics/BlackPawn.png"));
+		label.setBounds(30, 30, 60, 60);
+		panel.add(label);
+		
+		this.setVisible(true);
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		System.out.println("About to close the window");
+
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		System.out.println("The window has been closed");
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public class WindowSpot extends JButton {
+		public Spot spot;
+
+		public WindowSpot(int givenX, int givenY, Spot givenSpot, String ImageIcon) {
+			super(new ImageIcon(ImageIcon));
+			this.setBounds(givenX, givenY, 60, 60);
+			
+		}
+
+	}
+
+}

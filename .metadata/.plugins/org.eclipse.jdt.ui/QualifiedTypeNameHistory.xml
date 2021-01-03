@@ -9,4 +9,18 @@
     <fullyQualifiedTypeName name="java.io.BufferedWriter"/>
     <fullyQualifiedTypeName name="java.io.FileWriter"/>
     <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="game.Board.Piece"/>
+    <fullyQualifiedTypeName name="pieces.Empty"/>
+    <fullyQualifiedTypeName name="game.Board"/>
+    <fullyQualifiedTypeName name="game.Player"/>
+    <fullyQualifiedTypeName name="game.Board.Cord"/>
+    <fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
+    <fullyQualifiedTypeName name="java.awt.event.WindowListener"/>
+    <fullyQualifiedTypeName name="java.awt.Image"/>
+    <fullyQualifiedTypeName name="javax.swing.JButton"/>
+    <fullyQualifiedTypeName name="java.awt.FlowLayout"/>
+    <fullyQualifiedTypeName name="game.Board.Spot"/>
+    <fullyQualifiedTypeName name="javax.swing.ImageIcon"/>
+    <fullyQualifiedTypeName name="javax.swing.JLabel"/>
+    <fullyQualifiedTypeName name="game.Board.PieceType"/>
 </qualifiedTypeNameHistroy>

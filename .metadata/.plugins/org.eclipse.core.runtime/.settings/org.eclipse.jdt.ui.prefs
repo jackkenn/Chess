@@ -1,5 +1,5 @@
 Refactoring.savealleditors=true
-content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="board.PieceType"/></lhs><lhs name\="java.lang.constant.Constable"><rhs name\="board.PieceType"/></lhs><lhs name\="board.PieceType"><rhs name\="board.PieceType"/></lhs></history>
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="board.PieceType"/><rhs name\="game.Board$PieceType"/></lhs><lhs name\="java.lang.constant.Constable"><rhs name\="board.PieceType"/><rhs name\="game.Board$PieceType"/></lhs><lhs name\="board.PieceType"><rhs name\="board.PieceType"/></lhs><lhs name\="game.Board$PieceType"><rhs name\="game.Board$PieceType"/></lhs></history>
 content_assist_number_of_computers=12
 eclipse.preferences.version=1
 markOccurrences=false
