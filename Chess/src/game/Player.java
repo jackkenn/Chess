@@ -89,7 +89,7 @@ public class Player implements Cloneable {
 		return false;
 	}
 
-	public ArrayList<Spot[]> getLegalMoves() {
+	public ArrayList<Spot[]> findLegalMoves() {
 		legalMoves.clear();
 		if(king.getSpot().isAttacked(this)) {
 			mated = isMated();
@@ -100,7 +100,7 @@ public class Player implements Cloneable {
 	}
 	
 	public boolean isLegalMove(Spot piece, Spot nextSpot) {
-		getLegalMoves();
+		findLegalMoves();
 		for(Spot[] s : legalMoves) {
 			if(s[0].equals(piece)) {
 				if(s[1].equals(nextSpot)) {
@@ -120,5 +120,27 @@ public class Player implements Cloneable {
 			}
 		}
 		return false;
+	}
+
+	public void startTurn() {
+		turn = true;
+		if(enPassant != null) {
+			enPassant.enPassant=null;
+			enPassant = null;
+		}
+		findLegalMoves();
+	}
+	
+	public void endTurn() {
+		turn = false;
+		findLegalMoves();
+		opponent.startTurn();
+	}
+	
+	public String toString() {
+		if(DIRECTION != 0) {
+			return (DIRECTION == -1 ? new String("WHITE") : new String("BLACK"));
+		}
+		return new String("EMPTY");
 	}
 }

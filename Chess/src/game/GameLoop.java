@@ -15,20 +15,18 @@ import game.Board.Cord;
 import game.Board.Spot;
 
 public class GameLoop {
-	private static Board board = new Board();
+	private static Board board;
 	private static Scanner scan;
 	private static String input = new String();
 	private static ArrayList<String> inputList = new ArrayList<String>();
-	private static Player turn = board.white;
 	private static boolean runlast = false;
 	private static boolean record = false;
 	private static BufferedWriter moveList;
 	private static GameWindow window;
 	public static String movesIN = new String();
-	public static GameLoop self;
 	
 	public GameLoop() {
-		self = this;
+		board = new Board();
 	}
 
 	private static void print(String s) {
@@ -41,13 +39,14 @@ public class GameLoop {
 		if (curCord.row < board.grid.size() - 1 && curCord.row > 0 && curCord.column < board.grid.get(0).size() - 1
 				&& curCord.column > 0) {
 			Spot curSpot = board.getSpot(curCord);
-			if (curSpot.piece.getPlayer() == turn) {
+			Player player = curSpot.piece.getPlayer();
+			if (player.turn) {
 				Cord nextCord = board.new Cord(scan.hasNext() ? scan.next() : "00");
 				if (nextCord.row < board.grid.size() - 1 && nextCord.row > 0
 						&& nextCord.column < board.grid.get(0).size() - 1 && nextCord.column > 0) {
 					Spot nextSpot = board.getSpot(nextCord);
-					if (!turn.moves.isEmpty()) {
-						if (turn.isLegalMove(curSpot, nextSpot)) {
+					if (!player.moves.isEmpty()) {
+						if (player.isLegalMove(curSpot, nextSpot)) {
 							inputList.add(curCord.cord + " " + nextCord.cord);
 							if (record) {
 								moveList = new BufferedWriter(new FileWriter("MoveList.txt"));
@@ -57,7 +56,7 @@ public class GameLoop {
 								moveList.close();
 							}
 							board.getPiece(curCord).move(nextSpot);
-							turn = turn.opponent;
+							player.endTurn();
 							print(board.toString() + "\n\n");
 							scan.close();
 							return true;
@@ -89,46 +88,34 @@ public class GameLoop {
 	}
 
 	public static void main(String[] args) throws IOException {
-		runlast = false;
-		record = true;
+		GameLoop gameloop = new GameLoop();
+		gameloop.runlast = false;
+		gameloop.record = true;
+		
+		gameloop.window = new GameWindow(board, gameloop);
 		print(board.toString());
 		
-		if (runlast) { // repeat last game
+		if (gameloop.runlast) { // repeat last game
 			File f = new File("MoveList.txt");
 			Scanner tscan = new Scanner(f);
 			while (tscan.hasNextLine()) {
 				try {
-					move(tscan.nextLine().toUpperCase());
+					gameloop.move(tscan.nextLine().toUpperCase());
 				} catch (Exception e) {
 					System.out.println(e.getStackTrace());
 				}
 			}
 			tscan.close();
 		}
-		
-		/*
-		SwingUtilities.invokeLater(new Runnable() {
-		    @Override
-		    public void run() {
-		        window = new GameWindow(board, self);
-		    }
-		}); */
-		
-        Scanner scan = new Scanner(System.in);
-        
-        window = new GameWindow(board, self);
         
 		while (true) {
-			/*
-			if (scan.hasNextLine()) {
-				input = scan.nextLine();
-				move(input.toUpperCase());
-			}*/
-			if(movesIN.length() >= 5) {
-				move(movesIN);
-				movesIN = new String();
-				window.update();
+			gameloop.window.update();
+			if(gameloop.movesIN.length() >= 5) {
+				gameloop.move(movesIN);
+				gameloop.movesIN = new String();
+				gameloop.window.unselectedAll();
 			}
+			else {};
 		}
 	}
 }

@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import game.Player;
+import game.Board.Spot;
 import game.pieces.*;
 
 public class Board implements Cloneable {
@@ -17,8 +18,8 @@ public class Board implements Cloneable {
 		black.opponent = white;
 		white.turn = true;
 		genGrid(8, 8);
-		white.getLegalMoves();
-		black.getLegalMoves();
+		white.findLegalMoves();
+		black.findLegalMoves();
 	}
 
 	public Board(Board givenBoard) {
@@ -45,18 +46,18 @@ public class Board implements Cloneable {
 		}
 		white.opponent = black;
 		black.opponent = white;
-		for(Piece p : givenBoard.white.pieces) {
-			if(p.enPassant != null) {
+		for (Piece p : givenBoard.white.pieces) {
+			if (p.enPassant != null) {
 				this.getPiece(p.getSpot().cord).enPassant = (Pawn) this.getPiece(p.enPassant.getSpot().cord);
 			}
 		}
-		for(Piece p : givenBoard.black.pieces) {
-			if(p.enPassant != null) {
+		for (Piece p : givenBoard.black.pieces) {
+			if (p.enPassant != null) {
 				this.getPiece(p.getSpot().cord).enPassant = (Pawn) this.getPiece(p.enPassant.getSpot().cord);
 			}
 		}
-		white.getLegalMoves();
-		black.getLegalMoves();
+		white.findLegalMoves();
+		black.findLegalMoves();
 	}
 
 	private void genGrid(int rows, int columns) {
@@ -180,6 +181,10 @@ public class Board implements Cloneable {
 			}
 			return false;
 		}
+		
+		public String toString() {
+			return cord.toString();
+		}
 
 	}
 
@@ -201,10 +206,10 @@ public class Board implements Cloneable {
 
 		public Cord(String s) {
 			try {
-			column = (int) s.toCharArray()[0] - 65 + 1;
-			row = (int) s.toCharArray()[1] - 48;
-			cord = new String(s);
-			} catch (ArrayIndexOutOfBoundsException e){
+				column = (int) s.toCharArray()[0] - 65 + 1;
+				row = (int) s.toCharArray()[1] - 48;
+				cord = new String(s);
+			} catch (ArrayIndexOutOfBoundsException e) {
 				e.printStackTrace();
 			}
 		}
@@ -215,10 +220,10 @@ public class Board implements Cloneable {
 			column = temp.column;
 			cord = temp.cord;
 		}
-		
+
 		@Override
 		public String toString() {
-			return new String((char)(column+64)+Integer.toString(row));
+			return new String((char) (column + 64) + Integer.toString(row));
 		}
 
 		@Override

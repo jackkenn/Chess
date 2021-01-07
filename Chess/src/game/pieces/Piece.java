@@ -44,6 +44,7 @@ public abstract class Piece implements Cloneable {
 	public void delete() { //likely not needed
 		player.pieces.remove(this);
 		removeMoves();
+		spot.piece = new Empty(board.empty, spot, board);
 	}
 
 	public void move(Spot next) {

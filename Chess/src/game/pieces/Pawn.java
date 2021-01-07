@@ -6,12 +6,12 @@ import game.Board;
 import game.Board.*;
 import game.Player;
 
-public class Pawn extends Piece{
-	
+public class Pawn extends Piece {
+
 	public Pawn(Player givenPlayer, Spot givenSpot, Board givenBoard) {
 		super(givenPlayer, givenSpot, givenBoard);
 	}
-	
+
 	public Pawn(Piece oldPiece) {
 		super(oldPiece);
 		// TODO Auto-generated constructor stub
@@ -24,41 +24,43 @@ public class Pawn extends Piece{
 
 	@Override
 	public String toString() {
-		return player.DIRECTION==1 ? new String("P"): new String ("p");
+		return player.DIRECTION == 1 ? new String("P") : new String("p");
 	}
 
 	@Override
 	public ArrayList<Spot> getMoves() {
 		possibleMoves.clear();
-		Piece toCheck = board.getPiece(spot.cord.row+player.DIRECTION, spot.cord.column);
-		if(toCheck.getType()==PieceType.EMPTY) {
+		Piece toCheck = board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column);
+		if (toCheck.getType() == PieceType.EMPTY) {
 			possibleMoves.add(toCheck.spot);
-			toCheck = board.getPiece(spot.cord.row+player.DIRECTION+player.DIRECTION, spot.cord.column);
-			if(toCheck.getType()==PieceType.EMPTY) {
-				possibleMoves.add(toCheck.spot);
+			if (!moved) {
+				toCheck = board.getPiece(spot.cord.row + (player.DIRECTION * 2), spot.cord.column);
+				if (toCheck.getType() == PieceType.EMPTY) {
+					possibleMoves.add(toCheck.spot);
+				}
 			}
 		}
-		toCheck = board.getPiece(spot.cord.row+player.DIRECTION, spot.cord.column+1);
-		if(toCheck.getType()!=PieceType.BARRIER) {
-			if(toCheck.getType()!=PieceType.EMPTY&&toCheck.player!=player) {
+		toCheck = board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column + 1);
+		if (toCheck.getType() != PieceType.BARRIER) {
+			if (toCheck.getType() != PieceType.EMPTY && toCheck.player != player) {
 				possibleMoves.add(toCheck.spot);
 			}
-			if(toCheck.getType()==PieceType.EMPTY) {
-				if(toCheck.enPassant != null) {
-					if(spot==toCheck.spot&&toCheck.enPassant.player!=player) {
+			if (toCheck.getType() == PieceType.EMPTY) {
+				if (toCheck.enPassant != null) {
+					if (toCheck.enPassant.player != player) {
 						possibleMoves.add(toCheck.spot);
 					}
 				}
 			}
 		}
-		toCheck = board.getPiece(spot.cord.row+player.DIRECTION, spot.cord.column-1);
-		if(toCheck.getType()!=PieceType.BARRIER) {
-			if(toCheck.getType()!=PieceType.EMPTY&&toCheck.player!=player) {
+		toCheck = board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column - 1);
+		if (toCheck.getType() != PieceType.BARRIER) {
+			if (toCheck.getType() != PieceType.EMPTY && toCheck.player != player) {
 				possibleMoves.add(toCheck.spot);
 			}
-			if(toCheck.getType()==PieceType.EMPTY) {
-				if(toCheck.enPassant != null) {
-					if(spot==toCheck.spot&&toCheck.enPassant.player!=player) {
+			if (toCheck.getType() == PieceType.EMPTY) {
+				if (toCheck.enPassant != null) {
+					if (toCheck.enPassant.player != player) {
 						possibleMoves.add(toCheck.spot);
 					}
 				}
@@ -66,26 +68,32 @@ public class Pawn extends Piece{
 		}
 		return possibleMoves;
 	}
-	
+
 	public boolean enPassant(Spot next) {
 		Piece toCheck = board.getPiece(next.cord);
-		if(toCheck.getType()==PieceType.EMPTY) {
-			if(toCheck.enPassant != null) {
-				if(toCheck.enPassant.player!=player) {
+		if (toCheck.getType() == PieceType.EMPTY) {
+			if (toCheck.enPassant != null) {
+				if (toCheck.enPassant.player != player) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	public boolean doubleMove(Spot next) {
-		Piece toCheck = board.getPiece(spot.cord.row+player.DIRECTION, spot.cord.column);
-		if(toCheck.getType()==PieceType.EMPTY&&!moved) {
-			toCheck = board.getPiece(spot.cord.row+player.DIRECTION+player.DIRECTION, spot.cord.column);
-			if(toCheck.getType()==PieceType.EMPTY) {
-				return toCheck.spot==next ? true : false;
-			}
+
+	@Override
+	public void move(Spot next) {
+		if (spot.cord.row + (player.DIRECTION * 2) == next.cord.row) {
+			board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column).enPassant = this;
+			player.enPassant = (Empty) board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column);
 		}
-		return false;
+		if(next.piece.enPassant != null ? next.piece.enPassant.player.equals(player.opponent) : false) {
+			next.piece.enPassant.delete();
+		}
+		next.piece.delete();
+		spot.piece = new Empty(board.empty, spot, board);
+		spot = next;
+		spot.piece = this;
+		moved = true;
 	}
 }

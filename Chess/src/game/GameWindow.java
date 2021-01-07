@@ -34,41 +34,87 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 		this.setIconImage(icon);
 		this.setResizable(false);
 		this.setLayout(null);
-		boolean flag = true;
+		genGrid(true);
+		this.setVisible(true);
+	}
 
-		for (int i = 0; i < 8; i++) {
-			flag = !flag;
-			for (int j = 0; j < 8; j++) {
-				if (flag) {
-					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(i + 1, j + 1), this);
-					this.add(windowGrid[i][j]);
-					
-					JPanel panel = (JPanel) this.getContentPane();
-					JLabel label = new JLabel();
-					label.setIcon(new ImageIcon("graphics/BlackTile.png"));
-					label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-					panel.add(label);
-					flag = !flag;
-				} else {
-					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(i + 1, j + 1), this);
-					this.add(windowGrid[i][j]);
-					
-					JPanel panel = (JPanel) this.getContentPane();
-					JLabel label = new JLabel();
-					label.setIcon(new ImageIcon("graphics/WhiteTile.png"));
-					label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-					panel.add(label);
-					flag = !flag;
+	private void genGrid(boolean isWhite) {
+		if (isWhite) {
+			boolean flag = true;
+			for (int i = 0; i < 8; i++) {
+				flag = !flag;
+				for (int j = 0; j < 8; j++) {
+					if (flag) {
+						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
+								this);
+						this.add(windowGrid[i][j]);
+
+						JPanel panel = (JPanel) this.getContentPane();
+						JLabel label = new JLabel();
+						label.setIcon(new ImageIcon("graphics/BlackTile.png"));
+						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
+						panel.add(label);
+						flag = !flag;
+					} else {
+						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
+								this);
+						this.add(windowGrid[i][j]);
+
+						JPanel panel = (JPanel) this.getContentPane();
+						JLabel label = new JLabel();
+						label.setIcon(new ImageIcon("graphics/WhiteTile.png"));
+						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
+						panel.add(label);
+						flag = !flag;
+					}
+				}
+			}
+		} else {
+			boolean flag = false;
+			for (int i = 0; i < 8; i++) {
+				flag = !flag;
+				for (int j = 0; j < 8; j++) {
+					if (flag) {
+						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
+								this);
+						this.add(windowGrid[i][j]);
+
+						JPanel panel = (JPanel) this.getContentPane();
+						JLabel label = new JLabel();
+						label.setIcon(new ImageIcon("graphics/BlackTile.png"));
+						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
+						panel.add(label);
+						flag = !flag;
+					} else {
+						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
+								this);
+						this.add(windowGrid[i][j]);
+
+						JPanel panel = (JPanel) this.getContentPane();
+						JLabel label = new JLabel();
+						label.setIcon(new ImageIcon("graphics/WhiteTile.png"));
+						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
+						panel.add(label);
+						flag = !flag;
+					}
 				}
 			}
 		}
-		this.setVisible(true);
+
 	}
-	
+
 	public void update() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				windowGrid[i][j].updateIcon();
+			}
+		}
+	}
+
+	public void unselectedAll() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				windowGrid[i][j].selected = false;
 			}
 		}
 	}
@@ -118,6 +164,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 	public class WindowSpot extends JButton {
 		public Spot spot;
 		private GameWindow window;
+		public boolean selected = false;
 
 		public WindowSpot(int givenX, int givenY, Spot givenSpot, GameWindow givenWindow) {
 			this.setBounds(givenX, givenY, 60, 60);
@@ -130,19 +177,37 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println(spot.cord.toString());
-			        if(GameLoop.movesIN.length() > 0) {
-			        	GameLoop.movesIN += spot.cord.toString() + "\n";
-			        } else {
-			        	GameLoop.movesIN = spot.cord.toString() + " ";
-			        }
-					updateIcon();
+					clicked();
 				}
 			});
 
 		}
-		
+
+		private void clicked() {
+			System.out.println(spot.cord.toString());
+			if (spot.piece.getPlayer().turn || selected) {
+				if (GameLoop.movesIN.length() > 0) {
+					GameLoop.movesIN += spot.cord.toString() + "\n";
+				} else {
+					GameLoop.movesIN = spot.cord.toString() + " ";
+				}
+				if (spot.piece.getPlayer().turn) {
+					//spot.piece.getPlayer().findLegalMoves();
+				}
+				for (Spot s : spot.piece.possibleMoves) {
+					for (int i = 0; i < 8; i++) {
+						for (int j = 0; j < 8; j++) {
+							if (window.windowGrid[i][j].spot.equals(s)) {
+								window.windowGrid[i][j].selected = true;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		private void updateIcon() {
+			this.setContentAreaFilled(selected);
 			if (spot.piece.getType() == PieceType.PAWN) {
 				if (spot.piece.getPlayer().DIRECTION == 1) {
 					this.setIcon(new ImageIcon("graphics/WhitePawn.png"));
