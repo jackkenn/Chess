@@ -1,0 +1,26 @@
+package bots;
+
+import game.GameLoop;
+
+public class Rando extends AI {
+	
+	public Rando(GameLoop game, boolean isWhite, Long seed) {
+		super(game, isWhite, seed);
+	}
+	
+	public boolean move() {
+		if(self.turn && !self.mated) {
+			int index = rand.nextInt(self.legalMoves.size()) - 1;
+			boolean flag = game.move(self.legalMoves.get(index));
+			if(!flag) {
+				self.legalMoves.remove(index);
+				System.out.println("Attempted legal move but there was an Error");
+				return false;
+			}
+			return true;
+		} else {
+			return true;
+		}
+	}
+
+}

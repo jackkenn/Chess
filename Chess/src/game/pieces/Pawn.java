@@ -42,26 +42,34 @@ public class Pawn extends Piece {
 		}
 		toCheck = board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column + 1);
 		if (toCheck.getType() != PieceType.BARRIER) {
-			if (toCheck.getType() != PieceType.EMPTY && toCheck.player != player) {
-				possibleMoves.add(toCheck.spot);
+			this.addPinned(this, toCheck);
+			if (toCheck.getType() != PieceType.EMPTY) {
+				if (toCheck.player != player) {
+					possibleMoves.add(toCheck.spot);
+				}
 			}
 			if (toCheck.getType() == PieceType.EMPTY) {
 				if (toCheck.enPassant != null) {
 					if (toCheck.enPassant.player != player) {
 						possibleMoves.add(toCheck.spot);
+						this.addPinned(this, toCheck.enPassant);
 					}
 				}
 			}
 		}
 		toCheck = board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column - 1);
 		if (toCheck.getType() != PieceType.BARRIER) {
-			if (toCheck.getType() != PieceType.EMPTY && toCheck.player != player) {
-				possibleMoves.add(toCheck.spot);
+			this.addPinned(this, toCheck);
+			if (toCheck.getType() != PieceType.EMPTY) {
+				if (toCheck.player != player) {
+					possibleMoves.add(toCheck.spot);
+				}
 			}
 			if (toCheck.getType() == PieceType.EMPTY) {
 				if (toCheck.enPassant != null) {
 					if (toCheck.enPassant.player != player) {
 						possibleMoves.add(toCheck.spot);
+						this.addPinned(this, toCheck.enPassant);
 					}
 				}
 			}
@@ -87,7 +95,7 @@ public class Pawn extends Piece {
 			board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column).enPassant = this;
 			player.enPassant = (Empty) board.getPiece(spot.cord.row + player.DIRECTION, spot.cord.column);
 		}
-		if(next.piece.enPassant != null ? next.piece.enPassant.player.equals(player.opponent) : false) {
+		if (next.piece.enPassant != null ? next.piece.enPassant.player.equals(player.opponent) : false) {
 			next.piece.enPassant.delete();
 		}
 		next.piece.delete();
@@ -95,5 +103,9 @@ public class Pawn extends Piece {
 		spot = next;
 		spot.piece = this;
 		moved = true;
+		if (next.cord.row == 1 || next.cord.row == 8) {
+			this.delete();
+			next.piece = new Queen(player, next, board);
+		}
 	}
 }

@@ -1,0 +1,5 @@
+package bots;
+
+public abstract class AI {
+
+}

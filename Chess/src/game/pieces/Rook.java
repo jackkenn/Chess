@@ -6,7 +6,7 @@ import game.Board.*;
 import game.Player;
 
 public class Rook extends Piece {
-	
+
 	public Rook(Player givenPlayer, Spot givenSpot, Board givenBoard) {
 		super(givenPlayer, givenSpot, givenBoard);
 	}
@@ -37,8 +37,23 @@ public class Rook extends Piece {
 			if (toCheck.getType() == PieceType.EMPTY) {
 				possibleMoves.add(toCheck.spot);
 				i++;
-			} else if (toCheck.getPlayer() != player && toCheck.getType() != PieceType.BARRIER) {
-				possibleMoves.add(toCheck.spot);
+			} else if (toCheck.getType() != PieceType.BARRIER) {
+				if (toCheck.getPlayer() != player) {
+					possibleMoves.add(toCheck.spot);
+					while (true) {
+						i++;
+						Piece toCheckIfPinned = board.getPiece(spot.cord.row + i, spot.cord.column);
+						if (toCheckIfPinned.getType() == PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							break;
+						} else if (toCheckIfPinned.player.equals(player.opponent)) {
+							this.addPinned(this, toCheck, toCheckIfPinned);
+							break;
+						}
+					}
+				} else {
+					this.addPinned(this, toCheck);
+				}
 				break;
 			} else {
 				break;
@@ -50,8 +65,23 @@ public class Rook extends Piece {
 			if (toCheck.getType() == PieceType.EMPTY) {
 				possibleMoves.add(toCheck.spot);
 				i++;
-			} else if (toCheck.getPlayer() != player && toCheck.getType() != PieceType.BARRIER) {
-				possibleMoves.add(toCheck.spot);
+			} else if (toCheck.getType() != PieceType.BARRIER) {
+				if (toCheck.getPlayer() != player) {
+					possibleMoves.add(toCheck.spot);
+					while (true) {
+						i++;
+						Piece toCheckIfPinned = board.getPiece(spot.cord.row - i, spot.cord.column);
+						if (toCheckIfPinned.getType() == PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							break;
+						} else if (toCheckIfPinned.player.equals(player.opponent)) {
+							this.addPinned(this, toCheck, toCheckIfPinned);
+							break;
+						}
+					}
+				} else {
+					this.addPinned(this, toCheck);
+				}
 				break;
 			} else {
 				break;
@@ -63,8 +93,23 @@ public class Rook extends Piece {
 			if (toCheck.getType() == PieceType.EMPTY) {
 				possibleMoves.add(toCheck.spot);
 				i++;
-			} else if (toCheck.getPlayer() != player && toCheck.getType() != PieceType.BARRIER) {
-				possibleMoves.add(toCheck.spot);
+			} else if (toCheck.getType() != PieceType.BARRIER) {
+				if (toCheck.getPlayer() != player) {
+					possibleMoves.add(toCheck.spot);
+					while (true) {
+						i++;
+						Piece toCheckIfPinned = board.getPiece(spot.cord.row, spot.cord.column + i);
+						if (toCheckIfPinned.getType() == PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							break;
+						} else if (toCheckIfPinned.player.equals(player.opponent)) {
+							this.addPinned(this, toCheck, toCheckIfPinned);
+							break;
+						}
+					}
+				} else {
+					this.addPinned(this, toCheck);
+				}
 				break;
 			} else {
 				break;
@@ -76,8 +121,23 @@ public class Rook extends Piece {
 			if (toCheck.getType() == PieceType.EMPTY) {
 				possibleMoves.add(toCheck.spot);
 				i++;
-			} else if (toCheck.getPlayer() != player && toCheck.getType() != PieceType.BARRIER) {
-				possibleMoves.add(toCheck.spot);
+			} else if (toCheck.getType() != PieceType.BARRIER) {
+				if (toCheck.getPlayer() != player) {
+					possibleMoves.add(toCheck.spot);
+					while (true) {
+						i++;
+						Piece toCheckIfPinned = board.getPiece(spot.cord.row, spot.cord.column - i);
+						if (toCheckIfPinned.getType() == PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							break;
+						} else if (toCheckIfPinned.player.equals(player.opponent)) {
+							this.addPinned(this, toCheck, toCheckIfPinned);
+							break;
+						}
+					}
+				} else {
+					this.addPinned(this, toCheck);
+				}
 				break;
 			} else {
 				break;

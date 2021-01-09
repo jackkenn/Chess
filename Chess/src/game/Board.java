@@ -1,9 +1,16 @@
 package game;
 
 import java.util.ArrayList;
-import game.Player;
-import game.Board.Spot;
-import game.pieces.*;
+
+import game.pieces.Barrier;
+import game.pieces.Bishop;
+import game.pieces.Empty;
+import game.pieces.King;
+import game.pieces.Knight;
+import game.pieces.Pawn;
+import game.pieces.Piece;
+import game.pieces.Queen;
+import game.pieces.Rook;
 
 public class Board implements Cloneable {
 	public ArrayList<ArrayList<Spot>> grid;
@@ -24,17 +31,16 @@ public class Board implements Cloneable {
 
 	public Board(Board givenBoard) {
 		grid = new ArrayList<ArrayList<Spot>>();
-		try {
-			empty = givenBoard.empty.clone(this);
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		empty = new Player(this, 0);
 		for (int i = 0; i < 8 + 2; i++) {
 			grid.add(new ArrayList<Spot>());
 			for (int j = 0; j < 8 + 2; j++) {
 				grid.get(i).add(new Spot(i, j, this));
-				getSpot(i, j).setPiece(new Empty(empty, getSpot(i, j), this));
+				if (i == 0 || i == 8 + 1 || j == 0 || j == 8 + 1) {
+					getSpot(i, j).setPiece(new Barrier(empty, getSpot(i, j), this));
+				} else {
+					getSpot(i, j).setPiece(new Empty(empty, getSpot(i, j), this));
+				}
 			}
 		}
 		try {
@@ -56,8 +62,8 @@ public class Board implements Cloneable {
 				this.getPiece(p.getSpot().cord).enPassant = (Pawn) this.getPiece(p.enPassant.getSpot().cord);
 			}
 		}
-		white.findLegalMoves();
-		black.findLegalMoves();
+		white.getMoves();
+		black.getMoves();
 	}
 
 	private void genGrid(int rows, int columns) {
@@ -113,12 +119,13 @@ public class Board implements Cloneable {
 	}
 
 	public Spot getSpot(int row, int column) {
+		/*
 		if (row >= grid.size() || row < 0) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (column >= grid.get(0).size() || column < 0) {
 			throw new IndexOutOfBoundsException();
-		}
+		}*/
 		return grid.get(row).get(column);
 	}
 
@@ -148,7 +155,7 @@ public class Board implements Cloneable {
 			for (int j = 0; j < grid.get(i).size(); j++) {
 				try {
 					s += " " + getPiece(i, j).toString() + " ";
-				} catch (NullPointerException e) {
+				} catch (Exception e) {
 					s += " # ";
 					System.out.print("null spot at " + i + ", " + j + "\n");
 				}
@@ -156,6 +163,14 @@ public class Board implements Cloneable {
 			s += "\n";
 		}
 		return s;
+	}
+	
+	public void clearSpotsPieces() {
+		for(ArrayList<Spot> arr : grid) {
+			for(Spot s : arr) {
+				s.possiblePieces.clear();
+			}
+		}
 	}
 
 	public class Spot {
@@ -175,7 +190,7 @@ public class Board implements Cloneable {
 
 		public boolean isAttacked(Player player) {
 			for (Piece p : possiblePieces) {
-				if (p.getPlayer() == p.getPlayer().opponent) {
+				if (p.getPlayer() == player.opponent) {
 					return true;
 				}
 			}
@@ -184,6 +199,10 @@ public class Board implements Cloneable {
 		
 		public String toString() {
 			return cord.toString();
+		}
+		
+		public boolean equals(Spot s) {
+			return cord.equals(s.cord);
 		}
 
 	}
@@ -196,7 +215,7 @@ public class Board implements Cloneable {
 		public int row, column;
 		public String cord;
 
-		public Cord(int givenRow, int givenColumn) throws NullPointerException {
+		public Cord(int givenRow, int givenColumn) {
 			row = givenRow;
 			column = givenColumn;
 			String s = new String((char) (column + 65) + Integer.toString(row));
@@ -234,6 +253,16 @@ public class Board implements Cloneable {
 				e.printStackTrace();
 				return null;
 			}
+		}
+		
+		public boolean equals(Cord c) {
+			if(row != c.row) {
+				return false;
+			}
+			if(column != c.column) {
+				return false;
+			}
+			return true;
 		}
 
 	}

@@ -14,8 +14,8 @@ public abstract class Piece implements Cloneable {
 	public ArrayList<Spot> possibleMoves = new ArrayList<Spot>();
 	public Pawn enPassant = null;
 	public boolean moved = false;
-	public ArrayList<Spot[]> pinned;
-	public ArrayList<Spot[]> pinning;
+	public ArrayList<Piece[]> pinned = new ArrayList<Piece[]>();
+	public ArrayList<Piece[]> pinning = new ArrayList<Piece[]>();
 
 	public Piece(Player givenPlayer, Spot givenSpot, Board givenBoard) {
 		player = givenPlayer;
@@ -41,9 +41,9 @@ public abstract class Piece implements Cloneable {
 		return clone;
 	}
 
-	public void delete() { //likely not needed
+	public void delete() {
 		player.pieces.remove(this);
-		removeMoves();
+		removePins();
 		spot.piece = new Empty(board.empty, spot, board);
 	}
 
@@ -86,19 +86,73 @@ public abstract class Piece implements Cloneable {
 	}
 
 	public void addMoves() {
-		removeMoves();
 		getMoves();
 		for (Spot s : possibleMoves) {
 			s.possiblePieces.add(this);
 		}
 	}
-
-	public void removeMoves() {
-		for (Spot s : possibleMoves) {
-			s.possiblePieces.remove(this);
+	
+	public void removePins() {
+		pinning.clear();
+		pinned.clear();
+	}
+	
+	public int getPinned(Piece toCheck) {
+		for(int i = 0; i<pinned.size(); i++) {
+			if(pinned.get(i)[0].equals(toCheck)) {
+				return i;
+			}
+			if(pinned.get(i)[1].equals(toCheck)) {
+				return i;
+			}
+			if(pinned.get(i).length == 3) {
+				if(pinned.get(i)[2].equals(toCheck)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public int getPinning(Piece toCheck) {
+		for(int i = 0; i<pinning.size(); i++) {
+			if(pinning.get(i)[0].equals(toCheck)) {
+				return i;
+			}
+			if(pinning.get(i).length == 2) {
+				if(pinning.get(i)[1].equals(toCheck)) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public void addPinned(Piece pinnedBy, Piece pinned, Piece pinnedTo) {
+		if(pinnedTo == null) {
+			pinnedBy.pinning.add(new Piece[] {pinned});
+			pinned.pinned.add(new Piece[] {pinnedBy, pinned});
+		} else {
+			pinnedBy.pinning.add(new Piece[] {pinned, pinnedTo});
+			pinned.pinned.add(new Piece[] {pinnedBy, pinned, pinnedTo});
+			pinnedTo.pinned.add(new Piece[] {pinnedBy, pinned, pinnedTo});
 		}
 	}
+	
+	public void addPinned(Piece pinnedBy, Piece pinned) {
+		addPinned(pinnedBy, pinned, null);
+	}
 
+	
+	public boolean isProtected(Player player) {
+		for(Piece[] s: pinned) {
+			if(s[0].player.equals(player)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public abstract PieceType getType();
 
 	public abstract String toString();

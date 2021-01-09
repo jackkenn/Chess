@@ -46,7 +46,10 @@ public class Player implements Cloneable {
 	public ArrayList<Spot[]> getMoves() {
 		moves.clear();
 		for (Piece p : pieces) {
-			p.getMoves();
+			p.removePins();
+		}
+		for (Piece p : pieces) {
+			p.addMoves();
 			for(Spot s : p.possibleMoves) {
 				moves.add(new Spot[] {p.getSpot(), s});
 			}
@@ -76,34 +79,45 @@ public class Player implements Cloneable {
 					if(hasMove(p.getSpot(), s)) { //
 						Board checkingBoard = new Board(board);
 						Player inCheckPlayer = checkingBoard.white.turn ? checkingBoard.white : checkingBoard.black;
-						checkingBoard.getPiece(p.getSpot().cord).move(s);
+						checkingBoard.getPiece(p.getSpot().cord).move(checkingBoard.getSpot(s.cord));
+						checkingBoard.clearSpotsPieces();
 						inCheckPlayer.opponent.getMoves();
-						if(!inCheckPlayer.king.getSpot().isAttacked(inCheckPlayer.opponent)) {
-							legalMoves.add(new Spot[] {p.getSpot(), s});
+						if((inCheckPlayer.king != null) ? !inCheckPlayer.king.getSpot().isAttacked(inCheckPlayer): false) {
+							legalMoves.add(new Spot[] {p.getSpot(), board.getSpot(s.cord)});
 						}
 					}
 				}
 			}
-			return legalMoves.size() > 0;
+			return legalMoves.size() == 0;
 		}
 		return false;
 	}
 
 	public ArrayList<Spot[]> findLegalMoves() {
+		getMoves();
 		legalMoves.clear();
-		if(king.getSpot().isAttacked(this)) {
+		if(king != null ? king.getSpot().isAttacked(this) : false) {
+			System.out.println(this.toString() + " has been put into check");
 			mated = isMated();
 			return legalMoves;
 		}
-		legalMoves.addAll(getMoves());
+		legalMoves.addAll(moves);
 		return legalMoves;
 	}
 	
-	public boolean isLegalMove(Spot piece, Spot nextSpot) {
-		findLegalMoves();
+	public boolean isLegalMove(Spot curSpot, Spot nextSpot) {
+		//findLegalMoves(); //for debugging
 		for(Spot[] s : legalMoves) {
-			if(s[0].equals(piece)) {
+			if(s[0].equals(curSpot)) {
 				if(s[1].equals(nextSpot)) {
+					Board checkingBoard = new Board(board);
+					Player checkingPlayer = checkingBoard.getPiece(curSpot.cord).getPlayer();
+					checkingBoard.getPiece(curSpot.cord).move(checkingBoard.getSpot(nextSpot.cord));
+					checkingBoard.clearSpotsPieces();
+					checkingPlayer.opponent.getMoves();
+					if(checkingPlayer.king.getSpot().isAttacked(checkingPlayer)) {
+						return false;
+					}
 					return true;
 				}
 			}
@@ -111,9 +125,9 @@ public class Player implements Cloneable {
 		return false;
 	}
 	
-	private boolean hasMove(Spot piece, Spot nextSpot) {
+	private boolean hasMove(Spot curSpot, Spot nextSpot) {
 		for(Spot[] s : moves) {
-			if(s[0].equals(piece)) {
+			if(s[0].equals(curSpot)) {
 				if(s[1].equals(nextSpot)) {
 					return true;
 				}
@@ -129,17 +143,24 @@ public class Player implements Cloneable {
 			enPassant = null;
 		}
 		findLegalMoves();
+		if(mated) {
+			System.out.println(this.toString() + " has been CheckMated");
+		} else if(legalMoves.size() == 0) {
+			mated = true;
+			System.out.println(this.toString() + " has been StaleMated");
+		}
 	}
 	
 	public void endTurn() {
 		turn = false;
+		board.clearSpotsPieces();
 		findLegalMoves();
 		opponent.startTurn();
 	}
 	
 	public String toString() {
 		if(DIRECTION != 0) {
-			return (DIRECTION == -1 ? new String("WHITE") : new String("BLACK"));
+			return (DIRECTION == 1 ? new String("WHITE") : new String("BLACK"));
 		}
 		return new String("EMPTY");
 	}

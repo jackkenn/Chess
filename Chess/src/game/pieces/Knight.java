@@ -37,15 +37,21 @@ public class Knight extends Piece{
 						if(toCheck.getType()==PieceType.EMPTY) {
 							possibleMoves.add(toCheck.spot);
 						}
-						else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
-							possibleMoves.add(toCheck.spot);
+						else if(toCheck.getType()!=PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							if(toCheck.getPlayer()!=player) {
+								possibleMoves.add(toCheck.spot);
+							}
 						}
 						toCheck = board.getPiece(spot.cord.row+(i), spot.cord.column+(j*2));
 						if(toCheck.getType()==PieceType.EMPTY) {
 							possibleMoves.add(toCheck.spot);
 						}
-						else if(toCheck.getPlayer()!=player&&toCheck.getType()!=PieceType.BARRIER) {
-							possibleMoves.add(toCheck.spot);
+						else if(toCheck.getType()!=PieceType.BARRIER) {
+							this.addPinned(this, toCheck);
+							if(toCheck.getPlayer()!=player) {
+								possibleMoves.add(toCheck.spot);
+							}
 						}
 				} catch (java.lang.IndexOutOfBoundsException e) {}
 			}
