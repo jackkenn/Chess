@@ -108,4 +108,10 @@ public class Pawn extends Piece {
 			next.piece = new Queen(player, next, board);
 		}
 	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 }

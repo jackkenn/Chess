@@ -149,4 +149,10 @@ public class Bishop extends Piece {
 		return possibleMoves;
 	}
 
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 3;
+	}
+
 }

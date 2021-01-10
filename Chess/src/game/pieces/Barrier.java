@@ -77,6 +77,11 @@ public class Barrier extends Piece{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
 	
 
 }

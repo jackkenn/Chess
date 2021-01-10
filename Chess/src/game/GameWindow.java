@@ -28,13 +28,22 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 		board = givenBoard;
 		gameLoop = givenGameLoop;
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(560, 580);
+		this.setSize(560 + 100, 580);
 		this.setLocationRelativeTo(null);
 		Image icon = new javax.swing.ImageIcon("graphics/board.png").getImage();
 		this.setIconImage(icon);
 		this.setResizable(false);
 		this.setLayout(null);
 		genGrid(false);
+		JButton b = new JButton("Next");
+		b.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameLoop.nextTurn = !gameLoop.nextTurn;
+			}
+		});
+		b.setBounds(520, 80, 120, 60);
+		this.add(b);
 		this.setVisible(true);
 	}
 

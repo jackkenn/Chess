@@ -1,0 +1,31 @@
+package bots;
+
+import game.Board;
+import game.GameLoop;
+import game.Player;
+import game.pieces.Piece;
+
+public class UltraInstictStockFish extends AI{
+
+	public UltraInstictStockFish(GameLoop game, boolean isWhite, Long seed) {
+		super(game, isWhite, seed);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public boolean move() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	private int valueOfBoard(Board b) {
+		int value = 0;
+		int oppValue = 0;
+		Player p = b.white.DIRECTION == self.DIRECTION ? b.white : b.black;
+		for(Piece piece : p.pieces) {
+			
+		}
+		return -1;
+	}
+
+}

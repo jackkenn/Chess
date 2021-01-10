@@ -115,7 +115,7 @@ public class Player implements Cloneable {
 					checkingBoard.getPiece(curSpot.cord).move(checkingBoard.getSpot(nextSpot.cord));
 					checkingBoard.clearSpotsPieces();
 					checkingPlayer.opponent.getMoves();
-					if(checkingPlayer.king.getSpot().isAttacked(checkingPlayer)) {
+					if(checkingPlayer.king != null ? checkingPlayer.king.getSpot().isAttacked(checkingPlayer) : false) {
 						return false;
 					}
 					return true;

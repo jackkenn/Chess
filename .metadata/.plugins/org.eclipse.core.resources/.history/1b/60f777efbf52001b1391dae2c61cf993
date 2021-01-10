@@ -1,0 +1,56 @@
+package bots;
+
+import game.Board;
+import game.Board.Spot;
+import game.GameLoop;
+import game.Player;
+import game.pieces.Piece;
+
+public class UltraInstictStockFish extends AI {
+	private int turn = 0;
+	private Spot[] focus; //point of attack
+	
+	private final int pieceWeight; //Material value * this
+	private final int spotWeight; //where it is
+	private final int movesWeight; //where it can go
+	private final int pinningWeight; //pinning
+	private final int protectWeight; //protecting
+	private final int attackingWeight; //can capture
+	private final int attackedWeight; //can be captured
+	private final int selfPreference; //our board value * this
+	private final int checkWeight; //putting opp in check
+
+	public UltraInstictStockFish(GameLoop game, boolean isWhite, Long seed) {
+		super(game, isWhite, seed);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public boolean move() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	private int valueOfBoard(Player player) {
+		int matValue = 0;
+		int posValue = 0;
+		for(Piece p : player.pieces) {
+			if(p.getType()!=Board.PieceType.KING) {
+				matValue += p.getValue();
+			}
+			for(Piece[] piece : p.pinning) {
+				if(piece[1].getPlayer().equals(self.opponent)) {
+					if(piece[1].getType()==Board.PieceType.KING) {
+						posValue += checkWeight;
+					}
+					posValue += piece[1].getValue() * attackingWeight;
+				} else {
+					
+				}
+			}
+			
+		}
+		return -1;
+	}
+
+}

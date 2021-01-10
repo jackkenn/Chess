@@ -1,0 +1,43 @@
+package bots;
+
+import game.Board;
+import game.GameLoop;
+import game.Player;
+import game.pieces.Piece;
+
+public class UltraInstictStockFish extends AI {
+	private final int pawnValue;
+	private final int rookValue;
+	private final int knightValue;
+	private final int bishopValue;
+	private final int queenValue;
+	
+	private final int pieceWeight;
+	private final int spotWeight;
+	private final int pinningWeight;
+	private final int selfPreference;
+
+	public UltraInstictStockFish(GameLoop game, boolean isWhite, Long seed) {
+		super(game, isWhite, seed);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public boolean move() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	private int valueOfBoard(Board b, Player player) {
+		int matValue = 0;
+		int posValue = 0;
+		for(Piece p : player.pieces) {
+			if(p.getType()==Board.PieceType.PAWN) {
+				
+			}
+			
+		}
+		return -1;
+	}
+
+}

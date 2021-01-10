@@ -36,4 +36,10 @@ public class Empty extends Piece {
 		return null;
 	}
 
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
