@@ -15,14 +15,16 @@ public class Player implements Cloneable {
 	public King king = null;
 	public ArrayList<Spot[]> legalMoves;
 	public boolean mated = false;
+	public boolean staleMated = false;
+	public ArrayList<Spot> focus;
 
 	public Player(Board givenBoard, int givenDirection) {
 		board = givenBoard;
 		DIRECTION = givenDirection;
-
 		pieces = new ArrayList<Piece>();
 		moves = new ArrayList<Spot[]>();
 		legalMoves = new ArrayList<Spot[]>();
+		focus = new ArrayList<Spot>();
 	}
 	
 	public Player clone(Board givenBoard) throws CloneNotSupportedException {
@@ -39,6 +41,9 @@ public class Player implements Cloneable {
 		if(enPassant != null) {
 			clone.enPassant = (Empty) givenBoard.getPiece(enPassant.getSpot().cord);
 			
+		}
+		for(Spot s: focus) {
+			clone.focus.add(s);
 		}
 		return clone;
 	}
@@ -97,7 +102,7 @@ public class Player implements Cloneable {
 		getMoves();
 		legalMoves.clear();
 		if(king != null ? king.getSpot().isAttacked(this) : false) {
-			System.out.println(this.toString() + " has been put into check");
+			//System.out.println(this.toString() + " has been put into check");
 			mated = isMated();
 			return legalMoves;
 		}
@@ -144,10 +149,10 @@ public class Player implements Cloneable {
 		}
 		findLegalMoves();
 		if(mated) {
-			System.out.println(this.toString() + " has been CheckMated");
+			//System.out.println(this.toString() + " has been CheckMated");
 		} else if(legalMoves.size() == 0) {
-			mated = true;
-			System.out.println(this.toString() + " has been StaleMated");
+			staleMated = true;
+			//System.out.println(this.toString() + " has been StaleMated");
 		}
 	}
 	

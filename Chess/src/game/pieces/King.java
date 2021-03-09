@@ -38,7 +38,8 @@ public class King extends Piece {
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				Piece toCheck = board.getPiece(spot.cord.row + i, spot.cord.column + j);
-				if (toCheck.getType() == PieceType.EMPTY && !toCheck.getSpot().isAttacked(player)) {
+				//if (toCheck.getType() == PieceType.EMPTY && !toCheck.getSpot().isAttacked(player)) { //think causing issues
+				if (toCheck.getType() == PieceType.EMPTY) {
 					possibleMoves.add(toCheck.spot);
 				} else if (toCheck.player.equals(player.opponent) && !toCheck.isProtected(player.opponent)) {
 					possibleMoves.add(toCheck.spot);

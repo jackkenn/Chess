@@ -6,7 +6,10 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
+		<item key="selection" value="setFocus"/>
 		<list key="findhistory">
+			<item value="setFocus"/>
+			<item value="RankedMove"/>
 		</list>
 		<list key="replacehistory">
 		</list>

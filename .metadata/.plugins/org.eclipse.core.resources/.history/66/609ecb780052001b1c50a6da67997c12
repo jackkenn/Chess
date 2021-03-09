@@ -1,9 +1,0 @@
-package ai;
-
-import game.GameLoop;
-
-public class Random {
-	public GameLoop game;
-	
-
-}

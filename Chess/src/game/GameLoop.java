@@ -9,28 +9,27 @@ import java.util.Scanner;
 
 import bots.AI;
 import bots.UltraInstictStockFish;
-import bots.UltraInstictStockFish2;
 import game.Board.Cord;
 import game.Board.Spot;
+import game.pieces.Piece;
 
 public class GameLoop {
-	private static Board board;
-	private static Scanner scan = new Scanner(System.in);
-	private static String input = new String();
-	private static ArrayList<String> inputList = new ArrayList<String>();
-	private static boolean runlast = false;
-	private static boolean record = false;
-	private static BufferedWriter moveList;
-	private static GameWindow window;
-	private static AI white;
-	private static AI black;
+	private Board board;
+	private Scanner scan = new Scanner(System.in);
+	private String input = new String();
+	private ArrayList<String> inputList = new ArrayList<String>();
+	private boolean runlast = true;
+	private boolean record = false;
+	private BufferedWriter moveList;
+	private GameWindow window;
+	public UltraInstictStockFish white;
+	public UltraInstictStockFish black;
 	public static String movesIN = new String();
-	public static boolean nextTurn = false;
-	private static int numberOfMoves = 0;
-	private static Long delta;
+	public boolean nextTurn = false;
+	private int numberOfMoves = 0;
+	private Long delta;
 
 	public GameLoop() {
-		board = new Board();
 	}
 
 	public Board getBoard() {
@@ -41,7 +40,7 @@ public class GameLoop {
 		System.out.print(s);
 	}
 
-	private static boolean move(String move) throws IOException {
+	private boolean move(String move) throws IOException {
 		Scanner scan = new Scanner(move);
 		Cord curCord = board.new Cord(scan.hasNext() ? scan.next() : "00");
 		if (curCord.row < board.grid.size() - 1 && curCord.row > 0 && curCord.column < board.grid.get(0).size() - 1
@@ -67,7 +66,7 @@ public class GameLoop {
 						}
 						board.getPiece(curCord).move(nextSpot);
 						player.endTurn();
-						print(board.toString() + "\n\n");
+						print(board.toString() + "\n");
 						scan.close();
 						return true;
 					} else {
@@ -129,12 +128,14 @@ public class GameLoop {
 	}
 
 	public static void main(String[] args) throws IOException {
+		int numberOfMoves = 0;
 		GameLoop gameloop = new GameLoop();
+		gameloop.board = new Board();
 		gameloop.runlast = false;
 		gameloop.record = true;
 
-		gameloop.window = new GameWindow(board, gameloop);
-		print(board.toString());
+		gameloop.window = new GameWindow(gameloop.board, gameloop);
+		print(gameloop.board.toString());
 
 		if (gameloop.runlast) { // repeat last game
 			File f = new File("MoveList.txt");
@@ -143,15 +144,16 @@ public class GameLoop {
 				try {
 					String str = tscan.nextLine().toUpperCase();
 					if (new String(str.copyValueOf(str.toCharArray(), 0, 5)).contentEquals("SEED:")) {
-						Scanner seedScan = new Scanner(new String(str.copyValueOf(str.toCharArray(), 6, str.length() - 6)));
+						Scanner seedScan = new Scanner(
+								new String(str.copyValueOf(str.toCharArray(), 6, str.length() - 6)));
 						Long Seed = seedScan.nextLong();
-						white = new UltraInstictStockFish(gameloop, true, Seed);
-						black = new UltraInstictStockFish2(gameloop, false, Seed);
-						
+						gameloop.white = new UltraInstictStockFish(gameloop, true, Seed);
+						gameloop.black = new UltraInstictStockFish(gameloop, false, Seed);
+
 					} else {
 						gameloop.move(str);
-						white.next();
-						black.next();
+						gameloop.white.next();
+						gameloop.black.next();
 						gameloop.numberOfMoves++;
 					}
 				} catch (Exception e) {
@@ -160,39 +162,75 @@ public class GameLoop {
 			}
 			tscan.close();
 		} else {
-			white = new UltraInstictStockFish2(gameloop, true, System.currentTimeMillis());
-			black = new UltraInstictStockFish(gameloop, false, System.currentTimeMillis());
+			if(args.length > 0) {
+				gameloop.white = new UltraInstictStockFish(gameloop, true, System.currentTimeMillis(), args[0], new Scanner(args[1]).nextInt());
+				gameloop.black = new UltraInstictStockFish(gameloop, false, System.currentTimeMillis(), args[2], new Scanner(args[3]).nextInt());
+			} else {
+				gameloop.white = new UltraInstictStockFish(gameloop, true, System.currentTimeMillis());
+				//gameloop.black = new UltraInstictStockFish(gameloop, false, System.currentTimeMillis());
+			}
 		}
-		
-		while (!board.white.mated && !board.black.mated) {
+
+		while (!gameloop.board.white.mated && !gameloop.board.black.mated && !gameloop.board.white.staleMated && !gameloop.board.black.staleMated) {
 			gameloop.window.update();
-			if(nextTurn) {
-				if(delta == null) {
-					delta = System.currentTimeMillis();
+			//if (nextTurn) {
+				if (gameloop.delta == null) {
+					gameloop.delta = System.currentTimeMillis();
 				}
-				/*if (gameloop.movesIN.length() >= 5) {
-					gameloop.move(movesIN);
-					gameloop.movesIN = new String();
-					gameloop.window.unselectedAll();
-					while (!bot.move());
-				}*/
-				if(board.white.turn) {
-					white.move();
+				
+				if (gameloop.movesIN.length() >= 5) { 
+					 gameloop.move(movesIN); 
+					 gameloop.movesIN = new String();
+					 gameloop.window.unselectedAll();
+					 gameloop.window.update();
+				}
+				if (gameloop.board.white.turn) {
+					gameloop.white.move();
+					System.out.println("Black's turn");
+					gameloop.numberOfMoves++;
+				} else if(gameloop.board.black.turn) {
+					//gameloop.black.move();
+					//System.out.println("White's turn");
+					//gameloop.numberOfMoves++;
+				}
+				 //nextTurn = false;
+			//}
+			if (gameloop.numberOfMoves > 150) {
+				System.out.println("Game has exceeded max turns");
+				/*
+				int whiteValue = 0;
+				int blackValue = 0;
+				
+				for(Piece p : gameloop.white.self.pieces) {
+					whiteValue += p.getValue();
+				}
+				for(Piece p : gameloop.black.self.pieces) {
+					blackValue += p.getValue();
+				}
+				if(whiteValue>blackValue) {
+					(gameloop.black).writeWeights();
 				} else {
-					black.move();
+					(gameloop.white).writeWeights();
 				}
-				gameloop.window.unselectedAll();
-				//nextTurn = false;
-				gameloop.numberOfMoves++;
-			}
-			if(numberOfMoves>200) {
 				break;
+				*/
 			}
 		}
-		gameloop.window.unselectedAll();
+		if (gameloop.board.white.mated) {
+			System.out.println("White has been CheckMated");
+			//(gameloop.white).writeWeights();
+		} else if (gameloop.board.white.staleMated) {
+			System.out.println("White has been StaleMated");
+		} else if (gameloop.board.black.mated) {
+			System.out.println("Black has been CheckMated");
+			//(gameloop.black).writeWeights();
+		} else if (gameloop.board.black.staleMated) {
+			System.out.println("Black has been StaleMated");
+		}
 		gameloop.window.update();
 		gameloop.delta = (System.currentTimeMillis() - gameloop.delta);
-		System.out.println("Total time to run: " + (delta / 1000.0));
+		System.out.println("Total time to run: " + (gameloop.delta / 1000.0));
 		System.out.println("Total number of moves: " + gameloop.numberOfMoves);
+		//gameloop.window.setVisible(false);
 	}
 }

@@ -10,7 +10,7 @@ import game.Player;
 public abstract class AI {
 	public GameLoop game;
 	protected Board board;
-	protected Player self;
+	public Player self;
 	protected Player opp;
 	protected Random rand;
 	protected Long seed;
