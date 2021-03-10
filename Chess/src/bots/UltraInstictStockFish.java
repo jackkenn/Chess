@@ -112,6 +112,10 @@ public class UltraInstictStockFish extends AI {
 	private double RandDouble(Double lowBound, Double highBound) {
 		return lowBound + (highBound - lowBound) * rand.nextDouble();
 	}
+	
+	public void setSeed(long seed) {
+		this.seed = seed;
+	}
 
 	public void writeWeights() {
 		ArrayList<String> sList = new ArrayList<String>();

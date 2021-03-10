@@ -8,6 +8,7 @@ import java.awt.event.WindowListener;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,33 +19,133 @@ import javax.swing.JPanel;
 import game.Board.PieceType;
 import game.Board.Spot;
 
+import bots.UltraInstictStockFish;
+
 public class GameWindow extends javax.swing.JFrame implements WindowListener {
 	public Board board;
 	public WindowSpot windowGrid[][] = new WindowSpot[8][8];
 	public GameLoop gameLoop;
+	private ArrayList<JButton> startButtons = new ArrayList<JButton>();
+	private int width = 560;
+	private int height = 580;
 
 	public GameWindow(Board givenBoard, GameLoop givenGameLoop) {
 		super("Chess");
-		board = givenBoard;
 		gameLoop = givenGameLoop;
+		board = givenGameLoop.getBoard();
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(560 + 100, 580);
+		this.setSize(width, height);
 		this.setLocationRelativeTo(null);
 		Image icon = new javax.swing.ImageIcon("graphics/board.png").getImage();
 		this.setIconImage(icon);
 		this.setResizable(false);
 		this.setLayout(null);
-		genGrid(false);
-		JButton b = new JButton("Next");
-		b.addActionListener(new ActionListener() {
+		this.setVisible(true);
+	}
+	
+	public void init() {
+		startButtons.add(new JButton("Start"));
+		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameLoop.nextTurn = !gameLoop.nextTurn;
+				for(JButton b : startButtons) {
+					b.setVisible(false);
+				}
+				genGrid(gameLoop.white == null);
+				gameLoop.start = true;
+				gameLoop.gameInit();
 			}
 		});
-		b.setBounds(520, 80, 120, 60);
-		this.add(b);
-		this.setVisible(true);
+		
+		startButtons.add(new JButton("Add Black AI"));
+		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+			private boolean toggleFlag;
+			private int index = startButtons.size()-1;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(toggleFlag) {
+					startButtons.get(index).setText("Add Black AI");
+					gameLoop.black = null;
+					toggleFlag = !toggleFlag;
+				} else {
+					startButtons.get(index).setText("Remove Black AI");
+					gameLoop.black = new UltraInstictStockFish(gameLoop, false, System.currentTimeMillis());
+					toggleFlag = !toggleFlag;
+				}
+			}
+		});
+		
+		startButtons.add(new JButton("Add White AI"));
+		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+			private boolean toggleFlag;
+			private int index = startButtons.size()-1;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(toggleFlag) {
+					startButtons.get(index).setText("Add White AI");
+					gameLoop.white = null;
+					toggleFlag = !toggleFlag;
+				} else {
+					startButtons.get(index).setText("Remove White AI");
+					gameLoop.white = new UltraInstictStockFish(gameLoop, true, System.currentTimeMillis());
+					toggleFlag = !toggleFlag;
+				}
+			}
+		});
+		
+		startButtons.add(new JButton("Record Game"));
+		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+			private boolean toggleFlag;
+			private int index = startButtons.size()-1;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(toggleFlag) {
+					startButtons.get(index).setText("Record Game");
+					gameLoop.record = false;
+					toggleFlag = !toggleFlag;
+				} else {
+					startButtons.get(index).setText("Don't Record Game");
+					gameLoop.record = true;
+					toggleFlag = !toggleFlag;
+				}
+			}
+		});
+		
+		startButtons.add(new JButton("Load Game"));
+		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+			private boolean toggleFlag;
+			private int index = startButtons.size()-1;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(toggleFlag) {
+					startButtons.get(index).setText("Load Game");
+					gameLoop.runlast = false;
+					toggleFlag = !toggleFlag;
+				} else {
+					startButtons.get(index).setText("Don't Load Game");
+					gameLoop.runlast = true;
+					toggleFlag = !toggleFlag;
+				}
+			}
+		});
+		
+		addStartButtons(new int[] {30, 30}, new int[] {150, 60});
+	}
+	
+	private void addStartButtons(int gButtonPos[], int gButtonSize[]) {
+		int buttonPos[] = gButtonPos;
+		int buttonSize[] = gButtonSize;
+		for(JButton b : startButtons) {
+			b.setBounds(buttonPos[0], buttonPos[1], buttonSize[0], buttonSize[1]);
+			if(buttonPos[0] + buttonSize[0] + 30 + 20 >= width) {
+				buttonPos[0] = 30;
+				buttonPos[1] += buttonSize[1] + 20;
+			} else {
+				buttonPos[0] += buttonSize[0] + 20;
+			}
+			this.add(b);
+		}
+		
 	}
 
 	private void genGrid(boolean isWhite) {
@@ -53,29 +154,22 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			for (int i = 0; i < 8; i++) {
 				flag = !flag;
 				for (int j = 0; j < 8; j++) {
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
+							this);
+					this.add(windowGrid[i][j]);
+
+					JPanel panel = (JPanel) this.getContentPane();
+					JLabel label = new JLabel();
+					label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
 					if (flag) {
-						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
-								this);
-						this.add(windowGrid[i][j]);
-
-						JPanel panel = (JPanel) this.getContentPane();
-						JLabel label = new JLabel();
 						label.setIcon(new ImageIcon("graphics/BlackTile.png"));
-						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-						panel.add(label);
-						flag = !flag;
 					} else {
-						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
-								this);
-						this.add(windowGrid[i][j]);
-
-						JPanel panel = (JPanel) this.getContentPane();
-						JLabel label = new JLabel();
 						label.setIcon(new ImageIcon("graphics/WhiteTile.png"));
-						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-						panel.add(label);
-						flag = !flag;
 					}
+					panel.add(label);
+					label.setVisible(true);
+					panel.setVisible(true);
+					flag = !flag;
 				}
 			}
 		} else {
@@ -83,29 +177,22 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			for (int i = 0; i < 8; i++) {
 				flag = !flag;
 				for (int j = 0; j < 8; j++) {
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
+							this);
+					this.add(windowGrid[i][j]);
+
+					JPanel panel = (JPanel) this.getContentPane();
+					JLabel label = new JLabel();
+					label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
 					if (flag) {
-						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
-								this);
-						this.add(windowGrid[i][j]);
-
-						JPanel panel = (JPanel) this.getContentPane();
-						JLabel label = new JLabel();
 						label.setIcon(new ImageIcon("graphics/BlackTile.png"));
-						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-						panel.add(label);
-						flag = !flag;
 					} else {
-						windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
-								this);
-						this.add(windowGrid[i][j]);
-
-						JPanel panel = (JPanel) this.getContentPane();
-						JLabel label = new JLabel();
 						label.setIcon(new ImageIcon("graphics/WhiteTile.png"));
-						label.setBounds((i * 60) + 30, (j * 60) + 30, 60, 60);
-						panel.add(label);
-						flag = !flag;
 					}
+					panel.add(label);
+					label.setVisible(true);
+					panel.setVisible(true);
+					flag = !flag;
 				}
 			}
 		}
@@ -183,13 +270,13 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			setContentAreaFilled(false);
 			setBorderPainted(false);
 			updateIcon();
+			this.setVisible(false); //they show up right without this
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					clicked();
 				}
 			});
-
 		}
 
 		private void clicked() {
@@ -213,6 +300,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 		}
 
 		private void updateIcon() {
+			this.setVisible(true);
 			this.setContentAreaFilled(selected);
 			if (spot.piece.getType() == PieceType.PAWN) {
 				if (spot.piece.getPlayer().DIRECTION == 1) {
