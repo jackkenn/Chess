@@ -38,6 +38,10 @@ public abstract class Piece implements Cloneable {
 		givenPlayer.pieces.add(clone);
 		clone.moved = moved;
 		givenSpot.setPiece(clone);
+		clone.pinned = new ArrayList<Piece[]>();
+		clone.pinning = new ArrayList<Piece[]>();
+		clone.possibleMoves = new ArrayList<Spot>();
+		clone.enPassant = null;
 		return clone;
 	}
 
@@ -59,7 +63,7 @@ public abstract class Piece implements Cloneable {
 		return spot;
 	}
 
-	public Piece clone(Spot givenSpot) {
+	/*public Piece clone(Spot givenSpot) {
 		Piece piece = null;
 		try {
 			piece = (Piece) super.clone();
@@ -70,7 +74,7 @@ public abstract class Piece implements Cloneable {
 			e.printStackTrace();
 		}
 		return piece;
-	}
+	}*/
 
 	public Player getPlayer() {
 		return player;
@@ -86,6 +90,7 @@ public abstract class Piece implements Cloneable {
 	}
 
 	public void addMoves() {
+		possibleMoves.clear();
 		getMoves();
 		for (Spot s : possibleMoves) {
 			s.possiblePieces.add(this);

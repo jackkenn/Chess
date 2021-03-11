@@ -14,6 +14,8 @@ public abstract class AI {
 	protected Player opp;
 	protected Random rand;
 	protected Long seed;
+	
+	public int weightListIndex; //not needed
 
 	public AI(GameLoop game, boolean isWhite, Long seed) {
 		this.game = game;
@@ -30,6 +32,10 @@ public abstract class AI {
 
 	public long getSeed() {
 		return seed;
+	}
+	
+	public void setSeed(long seed) {
+		this.seed = seed;
 	}
 
 	public void next() {

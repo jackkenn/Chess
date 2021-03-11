@@ -20,6 +20,7 @@ import game.Board.PieceType;
 import game.Board.Spot;
 
 import bots.UltraInstictStockFish;
+import bots.UltraInstictStockFish2;
 
 public class GameWindow extends javax.swing.JFrame implements WindowListener {
 	public Board board;
@@ -42,28 +43,29 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 		this.setLayout(null);
 		this.setVisible(true);
 	}
-	
+
 	public void init() {
 		startButtons.add(new JButton("Start"));
-		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+		startButtons.get(startButtons.size() - 1).addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for(JButton b : startButtons) {
+				for (JButton b : startButtons) {
 					b.setVisible(false);
 				}
-				genGrid(gameLoop.white == null);
+				genGrid(gameLoop.white == null || gameLoop.black != null);
 				gameLoop.start = true;
 				gameLoop.gameInit();
 			}
 		});
-		
+
 		startButtons.add(new JButton("Add Black AI"));
-		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+		startButtons.get(startButtons.size() - 1).addActionListener(new ActionListener() {
 			private boolean toggleFlag;
-			private int index = startButtons.size()-1;
+			private int index = startButtons.size() - 1;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(toggleFlag) {
+				if (toggleFlag) {
 					startButtons.get(index).setText("Add Black AI");
 					gameLoop.black = null;
 					toggleFlag = !toggleFlag;
@@ -74,32 +76,34 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 				}
 			}
 		});
-		
+
 		startButtons.add(new JButton("Add White AI"));
-		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+		startButtons.get(startButtons.size() - 1).addActionListener(new ActionListener() {
 			private boolean toggleFlag;
-			private int index = startButtons.size()-1;
+			private int index = startButtons.size() - 1;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(toggleFlag) {
+				if (toggleFlag) {
 					startButtons.get(index).setText("Add White AI");
 					gameLoop.white = null;
 					toggleFlag = !toggleFlag;
 				} else {
 					startButtons.get(index).setText("Remove White AI");
-					gameLoop.white = new UltraInstictStockFish(gameLoop, true, System.currentTimeMillis());
+					gameLoop.white = new UltraInstictStockFish2(gameLoop, true, System.currentTimeMillis());
 					toggleFlag = !toggleFlag;
 				}
 			}
 		});
-		
+
 		startButtons.add(new JButton("Record Game"));
-		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+		startButtons.get(startButtons.size() - 1).addActionListener(new ActionListener() {
 			private boolean toggleFlag;
-			private int index = startButtons.size()-1;
+			private int index = startButtons.size() - 1;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(toggleFlag) {
+				if (toggleFlag) {
 					startButtons.get(index).setText("Record Game");
 					gameLoop.record = false;
 					toggleFlag = !toggleFlag;
@@ -110,14 +114,15 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 				}
 			}
 		});
-		
+
 		startButtons.add(new JButton("Load Game"));
-		startButtons.get(startButtons.size()-1).addActionListener(new ActionListener() {
+		startButtons.get(startButtons.size() - 1).addActionListener(new ActionListener() {
 			private boolean toggleFlag;
-			private int index = startButtons.size()-1;
+			private int index = startButtons.size() - 1;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(toggleFlag) {
+				if (toggleFlag) {
 					startButtons.get(index).setText("Load Game");
 					gameLoop.runlast = false;
 					toggleFlag = !toggleFlag;
@@ -128,16 +133,16 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 				}
 			}
 		});
-		
-		addStartButtons(new int[] {30, 30}, new int[] {150, 60});
+
+		addStartButtons(new int[] { 30, 30 }, new int[] { 150, 60 });
 	}
-	
+
 	private void addStartButtons(int gButtonPos[], int gButtonSize[]) {
 		int buttonPos[] = gButtonPos;
 		int buttonSize[] = gButtonSize;
-		for(JButton b : startButtons) {
+		for (JButton b : startButtons) {
 			b.setBounds(buttonPos[0], buttonPos[1], buttonSize[0], buttonSize[1]);
-			if(buttonPos[0] + buttonSize[0] + 30 + 20 >= width) {
+			if (buttonPos[0] + buttonSize[0] + 30 + 20 >= width) {
 				buttonPos[0] = 30;
 				buttonPos[1] += buttonSize[1] + 20;
 			} else {
@@ -145,7 +150,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			}
 			this.add(b);
 		}
-		
+
 	}
 
 	private void genGrid(boolean isWhite) {
@@ -154,8 +159,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			for (int i = 0; i < 8; i++) {
 				flag = !flag;
 				for (int j = 0; j < 8; j++) {
-					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1),
-							this);
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(8 - j, i + 1), this);
 					this.add(windowGrid[i][j]);
 
 					JPanel panel = (JPanel) this.getContentPane();
@@ -177,8 +181,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			for (int i = 0; i < 8; i++) {
 				flag = !flag;
 				for (int j = 0; j < 8; j++) {
-					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1),
-							this);
+					windowGrid[i][j] = new WindowSpot((i * 60) + 30, (j * 60) + 30, board.getSpot(j + 1, i + 1), this);
 					this.add(windowGrid[i][j]);
 
 					JPanel panel = (JPanel) this.getContentPane();
@@ -270,7 +273,7 @@ public class GameWindow extends javax.swing.JFrame implements WindowListener {
 			setContentAreaFilled(false);
 			setBorderPainted(false);
 			updateIcon();
-			this.setVisible(false); //they show up right without this
+			this.setVisible(false); // they show up right without this
 			addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

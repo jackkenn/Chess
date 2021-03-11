@@ -41,7 +41,7 @@ public class Trainer implements Runnable {
 			str[3] = rngArray.get(temp2) + "";
 			rngArray.remove(temp2);
 			try {
-				gl.loop(str);
+				//gl.loop(str);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

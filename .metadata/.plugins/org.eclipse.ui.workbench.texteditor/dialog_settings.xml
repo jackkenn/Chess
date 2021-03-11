@@ -6,12 +6,15 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="setFocus"/>
+		<item key="selection" value="calcMovesRec"/>
 		<list key="findhistory">
+			<item value="calcMoves"/>
+			<item value="c"/>
 			<item value="setFocus"/>
 			<item value="RankedMove"/>
 		</list>
 		<list key="replacehistory">
+			<item value="calcMovesRec"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
